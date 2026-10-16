@@ -1,0 +1,44 @@
+---
+// Wordmark: typographic, with the "x" in Flux drawn as two converging
+// stream-lines. Sized in em so it scales with whatever font-size wraps it.
+// The paths read as an x at a glance; the asymmetry is the custom detail.
+interface Props {
+  label?: string;
+}
+
+const { label = "Flux Studio" } = Astro.props;
+---
+
+<span class="wordmark" role="img" aria-label={label}><!--
+  --><span aria-hidden="true" class="wordmark-text">Flu</span><svg
+    aria-hidden="true"
+    class="wordmark-x"
+    viewBox="0 6 80 88"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="13"
+    stroke-linecap="round"
+  >
+    <path d="M 15 12 C 35 34, 47 56, 65 86" />
+    <path d="M 65 12 C 45 34, 33 56, 15 86" />
+  </svg><span aria-hidden="true" class="wordmark-text"> Studio</span></span
+>
+
+<style>
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .wordmark-x {
+    height: 0.6em;
+    width: auto;
+    margin-inline: 0.01em;
+    transform: translateY(0.045em);
+    flex: none;
+  }
+</style>

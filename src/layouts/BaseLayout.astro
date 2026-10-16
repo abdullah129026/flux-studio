@@ -1,0 +1,103 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/tokens.css";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: string;
+}
+
+const { title, description = site.tagline, current = "/" } = Astro.props;
+const pageTitle = title === site.name ? title : `${title} · ${site.name}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0b0e0c" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <script is:inline>
+      // Set the theme before first paint. No-JS fallback is the OS preference
+      // via the media query in tokens.css.
+      (function () {
+        try {
+          var saved = localStorage.getItem("flux-theme");
+          if (saved === "dark" || saved === "light") {
+            document.documentElement.setAttribute("data-theme", saved);
+          } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.setAttribute("data-theme", "dark");
+          } else {
+            document.documentElement.setAttribute("data-theme", "light");
+          }
+          // Only enable staged entrances when motion is welcome.
+          if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            document.documentElement.classList.add("js");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <Header current={current} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline>
+      (function () {
+        // Theme toggle.
+        var toggle = document.getElementById("theme-toggle");
+        if (toggle) {
+          toggle.addEventListener("click", function () {
+            var el = document.documentElement;
+            var next = el.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            el.setAttribute("data-theme", next);
+            try {
+              localStorage.setItem("flux-theme", next);
+            } catch (e) {}
+          });
+        }
+
+        // Mobile menu.
+        var menu = document.getElementById("mobile-menu");
+        var openBtn = document.getElementById("menu-open");
+        var closeBtn = document.getElementById("menu-close");
+        function setMenu(open) {
+          if (!menu || !openBtn) return;
+          menu.classList.toggle("open", open);
+          menu.setAttribute("aria-hidden", open ? "false" : "true");
+          openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          document.body.style.overflow = open ? "hidden" : "";
+        }
+        if (openBtn) openBtn.addEventListener("click", function () { setMenu(true); });
+        if (closeBtn) closeBtn.addEventListener("click", function () { setMenu(false); });
+
+        // Shipping feed stream-in. Items are visible without JS; with JS they
+        // enter in sequence, staggered by the --i custom property in CSS.
+        var items = document.querySelectorAll(".feed-item");
+        if (items.length && document.documentElement.classList.contains("js")) {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              items.forEach(function (item) { item.classList.add("is-in"); });
+            });
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

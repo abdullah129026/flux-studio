@@ -1,0 +1,15 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+---
+
+<BaseLayout title="Contact" current="/contact" description="Get in touch with Flux Studio.">
+  <div class="container stub">
+    <h1>Contact</h1>
+    <p>
+      Email: <a href={`mailto:${site.email}`}>{site.email}</a><br />
+      LinkedIn: <a href={site.linkedin} rel="me noopener">Muhammad Abdullah Shah</a>
+    </p>
+    <p style="color: var(--ink-muted);">A proper contact form lands in Phase 2.</p>
+  </div>
+</BaseLayout>

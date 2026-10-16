@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { shippingLog } from "../data/shipping";
+---
+
+<BaseLayout title="Changelog" current="/changelog" description="The Flux Studio shipping log: dated, verifiable milestones.">
+  <div class="container" style="padding: var(--space-16) 0;">
+    <h1>Changelog</h1>
+    <p style="color: var(--ink-muted); max-width: var(--measure);">
+      A dated record of what shipped. Every entry links to its source.
+    </p>
+    <ul class="feed-list" style="margin-top: var(--space-8);">
+      {shippingLog.map((entry, i) => (
+        <li class="feed-item" style={`--i: ${i}`}>
+          <span class="feed-date">{entry.date}</span>
+          <span class="feed-text">{entry.text}</span>
+          {entry.href ? (
+            <a class="feed-link" href={entry.href} rel="noopener">
+              source <span aria-hidden="true">&nearr;</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

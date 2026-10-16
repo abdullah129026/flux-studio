@@ -1,0 +1,42 @@
+---
+import Wordmark from "./Wordmark.astro";
+import { shippingLog } from "../data/shipping";
+---
+
+<section class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Independent software studio</p>
+    <h1 class="hero-wordmark">
+      <Wordmark />
+    </h1>
+    <p class="hero-sub">
+      We design and ship AI products and full-stack applications, from idea to production.
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="/products">View products</a>
+      <a class="btn btn-ghost" href="/contact">Get in touch</a>
+    </div>
+
+    <div class="shipping-log" aria-label="Studio shipping log">
+      <p class="shipping-log-label">
+        <span class="live-dot" aria-hidden="true"></span>
+        Shipping log
+      </p>
+      <ul class="feed-list">
+        {shippingLog.map((entry, i) => (
+          <li class="feed-item" style={`--i: ${i}`}>
+            <span class="feed-date">{entry.date}</span>
+            <span class="feed-text">{entry.text}</span>
+            {entry.href ? (
+              <a class="feed-link" href={entry.href} rel="noopener">
+                source <span aria-hidden="true">&nearr;</span>
+              </a>
+            ) : (
+              <span />
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

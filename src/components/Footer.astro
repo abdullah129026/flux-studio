@@ -1,0 +1,38 @@
+---
+import Wordmark from "./Wordmark.astro";
+import { nav, site } from "../data/site";
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <span style="font-size: 1.5rem"><Wordmark /></span>
+        <p class="footer-statement" style="margin-top: var(--space-4)">
+          {site.tagline}
+        </p>
+      </div>
+      <div>
+        <h2 class="footer-heading">Studio</h2>
+        <ul class="footer-nav">
+          {nav.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Elsewhere</h2>
+        <ul class="footer-nav">
+          <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
+          <li><a href={site.github} rel="me noopener">GitHub</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.blog.url} rel="noopener">{site.blog.name} (blog)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© 2026 Flux Studio.</span>
+      <span class="mono">Built with Astro. No trackers.</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products } from "../../data/products";
+---
+
+<BaseLayout title="Products" current="/products" description="Every product Flux Studio has shipped or is building.">
+  <div class="container" style="padding: var(--space-16) 0;">
+    <h1>Products</h1>
+    <p style="color: var(--ink-muted); max-width: var(--measure);">
+      Everything we ship is listed here, with its status. Live means you can use it today.
+    </p>
+    <ul class="product-list" style="margin-top: var(--space-8);">
+      {products.map((p) => (
+        <li>
+          <span class={`status-badge${p.status === "Live" ? " is-live" : ""}`}>{p.status}</span>
+          <h2 class="product-name">{p.name}</h2>
+          {p.tagline ? (
+            <p class="product-tagline">{p.tagline}</p>
+          ) : (
+            <p class="product-tagline">In the pipeline. Details when there is something real to show.</p>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
