@@ -96,3 +96,50 @@ combinations during the run.
   GSAP plugin; it loads idle-deferred and never blocks paint.
 - Lighthouse was run against localhost; real-world numbers will vary with
   CDN edge latency (in our favor on Vercel).
+
+---
+
+## Addendum: Phase 5 anti-slop review (2026-10-16)
+
+- Mechanical scan of all of `src/`: 0 em dashes, 0 banned phrases (full
+  Section 2 list plus close cousins).
+- Re-read every page (home sections, products index, all 8 product detail
+  pages, about, contact, changelog, 404, header/footer/palette/form): no
+  invented testimonials, logos, metrics, or press; every number traceable to
+  `products.ts`/`shipping.ts`; microcopy human and on-brand; voice
+  consistent first-person plural.
+- Product copy untouched (owner-approved 2026-10-16).
+- One gap found and fixed: the command palette showed a blank list when a
+  search matched nothing. It now renders "Nothing matches that."
+  (`CommandPalette.astro` + `global.css`), verified in headless Chromium,
+  zero console errors.
+
+## Acceptance checklist (brief Section 13), verified 2026-10-16
+
+- No banned visuals or phrases: PASS (mechanical scan, 0 hits).
+- No fabricated testimonials, logos, metrics, or press: PASS (every claim
+  traced to owner records).
+- Every product has a detail page from the data file; adding a product is a
+  data-file-only edit: PASS (8/8 pages in the build; smoke test 2026-10-16
+  added a 9th dummy product, built 15 pages, rendered, reverted).
+- Home sections use varied compositions; hero is distinctive with a static
+  fallback: PASS (7 different compositions; feed visible without JS).
+- Dark and light themes pass contrast checks: PASS (0 Lighthouse contrast
+  failures after the Phase 4 fix).
+- Reduced-motion mode complete and tested: PASS (module never loads under
+  the OS setting; emulated test, 0 hidden content).
+- Keyboard-only navigation works across the site: PASS (nav, nested
+  dropdown, mobile menu, palette, filters all operable; visible focus).
+- Lighthouse targets met on the production build: PASS (see scores above).
+- Contact form works end to end with the static provider: PARTIAL. Code is
+  complete (validation, inline errors, honeypot, success/failure states,
+  provider integration), but live delivery cannot be verified until the
+  owner adds the Web3Forms key. Until then the form shows an honest
+  "not connected yet" note with a mailto fallback. See LAUNCH.md.
+- Intentional and polished at every breakpoint: PASS (360-1920 verified,
+  zero overflow).
+- README, DESIGN.md, research notes present and accurate: PASS (finalized
+  in Phase 6).
+- Would not read as AI-generated from a template: PASS with the caveat that
+  this is ultimately the owner's judgment; the design passed his approval
+  at Phase 1, 2, 3, 4, and 5 with his own corrections folded in.

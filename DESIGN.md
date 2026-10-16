@@ -203,10 +203,34 @@ Done in Phase 3 (2026-10-16):
   skip-link anchors, keyboard scrolling (End key), and magnetic reset all
   work under Lenis; no-JS renders everything in final state.
 
-## Open items for Phase 4
+## Phase 4 QA (done 2026-10-16, see QA-REPORT.md)
 
-- Lighthouse QA on the production build; responsive spot-checks.
-- Optical pass on the wordmark x against rendered type.
+- Lighthouse (mobile): Home 98 / Products 93 / Contact 91 perf; 96 a11y;
+  100 best practices; 100 SEO. LCP 2.0s, CLS 0. Desktop perf 100, LCP 0.5s.
+- Fixed: `--ink-faint` contrast failures in both themes; font preloads for
+  LCP; motion chunk deferred to requestIdleCallback; skip-link focus
+  (`tabindex="-1"` on main); 44px tap targets on header controls; `astro
+  check` now runs clean (0 errors, 0 warnings) after installing
+  `@astrojs/check` as a dev dependency.
+- Responsive: 360/390/768/1024/1280/1440/1920 verified, zero overflow.
+- SEO audit: unique titles/metas, OG cards, JSON-LD, sitemap, robots all clean.
+
+## Phase 5 anti-slop review (done 2026-10-16)
+
+- Full re-read of every page against the banned list: zero banned phrases,
+  zero em dashes, no invented proof, every number traceable to
+  products.ts/shipping.ts. Product copy left untouched (owner-approved).
+- One real gap fixed: the command palette had no empty state; it now says
+  "Nothing matches that."
+
+## Still open (minor)
+
+- Optical pass on the wordmark x against rendered type at large sizes
+  (eyeballed in Phase 1; never formally re-checked).
+- Contact form end-to-end delivery cannot be verified until the owner adds
+  the Web3Forms key (see LAUNCH.md); validation, honeypot, and
+  success/failure states are implemented and the provider integration is
+  code-complete.
 
 ## Navbar Products dropdown (added 2026-10-16, owner-requested)
 
