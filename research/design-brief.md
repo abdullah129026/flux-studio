@@ -53,4 +53,4 @@ The owner corrected the browser-task report from live observation. This is the g
 - **Persistence:** the card stays open as long as the cursor is on the card itself or on the navbar button.
 - **Positioning:** each dropdown appears below its own corresponding button (anchored per-button, not one shared centered panel).
 - **Switch animation:** moving the cursor from one nav button to another slides the dropdown box horizontally in the direction of travel. Moving left to right (Features to Company), the box slides from right to left into place under the new button. Moving right to left, it slides left to right. The slide is directional, tied to cursor movement.
-- Status: research only. Do NOT implement on the Flux Studio site until the owner explicitly asks.
+- Status: IMPLEMENTED 2026-10-16 at the owner's explicit request ("ok implement that").

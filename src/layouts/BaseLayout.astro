@@ -174,6 +174,7 @@ const allJsonLd = jsonLd
               openToken++;
               if (panel) panel.style.setProperty("--drop-x", "0px");
               wrap.setAttribute("data-open", "false");
+              closeFlyoutsIn(wrap);
             }
             if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
           }
@@ -195,6 +196,10 @@ const allJsonLd = jsonLd
           wraps().forEach(function (wrap) {
             var trigger = wrap.querySelector(".nav-dropdown-trigger");
             if (!trigger) return;
+
+            // Escape closes the panel and refocuses the trigger; the focus
+            // move itself must not trip the focusin opener below.
+            var suppressFocusOpen = false;
 
             if (canHover) {
               wrap.addEventListener("mouseenter", function () {
@@ -221,20 +226,170 @@ const allJsonLd = jsonLd
               });
             }
 
-            wrap.addEventListener("focusin", function () { if (canHover) openFrom(wrap); });
+            wrap.addEventListener("focusin", function () {
+              if (suppressFocusOpen) return;
+              if (canHover) openFrom(wrap);
+            });
+            trigger.addEventListener("keydown", function (e) {
+              // ArrowDown on the trigger drops into the first submenu row.
+              // Enter still follows the link (existing behavior).
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                var firstBtn = wrap.querySelector("[data-flyout] .nav-drop-rowbtn");
+                if (firstBtn) firstBtn.focus();
+              }
+            });
             wrap.addEventListener("focusout", function (e) {
               if (!wrap.contains(e.relatedTarget)) setOpen(wrap, false);
             });
             wrap.addEventListener("keydown", function (e) {
               if (e.key === "Escape") {
                 setOpen(wrap, false);
+                suppressFocusOpen = true;
                 trigger.focus();
+                suppressFocusOpen = false;
               }
             });
           });
 
           // A scrolling page hides the header; never leave a panel floating.
           window.addEventListener("scroll", function () { closeAll(); }, { passive: true });
+
+          // Nested flyouts: Live / In development / Upcoming rows inside the
+          // Products panel. Hover opens, stays open while the cursor is on the
+          // row or the flyout (180ms close delay covers the gap), and the
+          // flyout slides in from the panel side.
+          var flyTimer = null;
+
+          function flyoutRows(scope) {
+            var root = scope || document;
+            return Array.prototype.slice.call(root.querySelectorAll("[data-flyout]"));
+          }
+
+          function setFlyout(row, open) {
+            if (!row) return;
+            var btn = row.querySelector(".nav-drop-rowbtn");
+            var fly = row.querySelector(".nav-flyout");
+            // Per-row token: every call invalidates this row's own pending
+            // transition, so a close can never cancel another row's open
+            // (or vice versa). Cross-row interference was the old bug.
+            row.__flyToken = (row.__flyToken || 0) + 1;
+            if (open) {
+              var slide = !reduceMotion && fly;
+              if (slide) {
+                var token = row.__flyToken;
+                fly.style.setProperty("--fly-x", "-14px");
+                fly.style.transition = "none";
+                void fly.offsetWidth;
+                fly.style.transition = "";
+                requestAnimationFrame(function () {
+                  if (row.__flyToken !== token) return;
+                  row.setAttribute("data-open", "true");
+                });
+              } else {
+                row.setAttribute("data-open", "true");
+              }
+            } else {
+              if (fly) fly.style.setProperty("--fly-x", "0px");
+              row.setAttribute("data-open", "false");
+            }
+            if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+          }
+
+          function closeFlyouts(except) {
+            flyoutRows().forEach(function (r) { if (r !== except) setFlyout(r, false); });
+          }
+
+          function closeFlyoutsIn(wrap) {
+            flyoutRows(wrap).forEach(function (r) { setFlyout(r, false); });
+          }
+
+          flyoutRows().forEach(function (row) {
+            var btn = row.querySelector(".nav-drop-rowbtn");
+            if (!btn) return;
+
+            if (canHover) {
+              row.addEventListener("mouseenter", function () {
+                if (flyTimer) { clearTimeout(flyTimer); flyTimer = null; }
+                closeFlyouts(row);
+                setFlyout(row, true);
+              });
+              row.addEventListener("mouseleave", function () {
+                flyTimer = setTimeout(function () { setFlyout(row, false); }, 180);
+              });
+            } else {
+              // Touch: tap the row to toggle its flyout; tapping a product
+              // link navigates. Keyboard Enter is handled below, so guard
+              // against the focus event racing the toggle is not needed here
+              // because buttons do not navigate.
+              btn.addEventListener("click", function () {
+                var isOpen = row.getAttribute("data-open") === "true";
+                if (isOpen) setFlyout(row, false);
+                else { closeFlyouts(row); setFlyout(row, true); }
+              });
+              document.addEventListener("click", function (e) {
+                if (!row.contains(e.target)) setFlyout(row, false);
+              });
+            }
+
+            // Keyboard: Up/Down move between rows, Right/Enter opens the
+            // flyout and lands on the first product, Left/Escape closes back
+            // to the row.
+            btn.addEventListener("keydown", function (e) {
+              var all = flyoutRows();
+              var i = all.indexOf(row);
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                all[(i + 1) % all.length].querySelector(".nav-drop-rowbtn").focus();
+              } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                all[(i - 1 + all.length) % all.length].querySelector(".nav-drop-rowbtn").focus();
+              } else if (e.key === "ArrowRight" || e.key === "Enter") {
+                e.preventDefault();
+                closeFlyouts(row);
+                setFlyout(row, true);
+                // Focus only after the flyout is visible; focusing a link
+                // inside a visibility:hidden container is a no-op.
+                var first = row.querySelector(".nav-flyout a");
+                if (first) {
+                  requestAnimationFrame(function () {
+                    requestAnimationFrame(function () { first.focus(); });
+                  });
+                }
+              } else if (e.key === "ArrowLeft" || e.key === "Escape") {
+                // Flyout already closed: let Escape bubble to the
+                // panel-level handler, which closes the panel and refocuses
+                // the trigger. Otherwise close just the flyout.
+                if (row.getAttribute("data-open") !== "true") return;
+                e.preventDefault();
+                e.stopPropagation();
+                setFlyout(row, false);
+                btn.focus();
+              }
+            });
+
+            var fly = row.querySelector(".nav-flyout");
+            if (fly) {
+              fly.addEventListener("keydown", function (e) {
+                var links = Array.prototype.slice.call(fly.querySelectorAll("a"));
+                var i = links.indexOf(document.activeElement);
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  links[(i + 1) % links.length].focus();
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  links[(i - 1 + links.length) % links.length].focus();
+                } else if (e.key === "ArrowLeft" || e.key === "Escape") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setFlyout(row, false);
+                  btn.focus();
+                } else if (e.key === "Tab" && !e.shiftKey && i === links.length - 1) {
+                  setFlyout(row, false);
+                }
+              });
+            }
+          });
         })();
 
         // Shipping feed stream-in. Items are visible without JS; with JS they

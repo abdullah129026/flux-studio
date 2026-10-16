@@ -207,3 +207,7 @@ Done in Phase 3 (2026-10-16):
 
 - Lighthouse QA on the production build; responsive spot-checks.
 - Optical pass on the wordmark x against rendered type.
+
+## Navbar Products dropdown (added 2026-10-16, owner-requested)
+
+Resend-style hover dropdown on the Products nav item, per the owner's corrected spec (research/design-brief.md). Opens on hover/focus, stays open while the cursor is on the button or the card (invisible hover bridge), anchored below its own button. Directional slide: the panel slides horizontally in the direction of cursor travel between dropdown buttons (tracked via trigger center X, applied as `--drop-x`, staged with transitions disabled then opened on the next frame so the slide starts from the correct side). Touch: tap toggles, keyboard Enter still follows the link. Keyboard: focus opens, Escape closes and refocuses the trigger. Reduced motion: no slide, fade only. Content is generated from `src/data/products.ts` (Live / In development / Upcoming groups, footer row "View all products"); mobile menu lists all products under Products with status labels. No icons, no badges, nothing invented.
