@@ -1791,6 +1791,13 @@ html.js .feed-item.is-in {
   letter-spacing: 0.06em;
 }
 
+.palette-empty {
+  margin: 0;
+  padding: 1.5rem 1.25rem;
+  font-size: var(--text-small);
+  color: var(--ink-faint);
+}
+
 .palette-foot {
   margin: 0;
   padding: 0.7rem 1.25rem;

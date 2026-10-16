@@ -45,6 +45,7 @@ const items = [
         </li>
       ))}
     </ul>
+    <p class="palette-empty" id="palette-empty" hidden>Nothing matches that.</p>
     <p class="palette-foot">
       <kbd>↑</kbd><kbd>↓</kbd> move · <kbd>↵</kbd> open · <kbd>esc</kbd> close
     </p>
@@ -58,6 +59,7 @@ const items = [
     var input = document.getElementById("palette-input");
     var list = document.getElementById("palette-list");
     var rows = Array.prototype.slice.call(list.querySelectorAll("li"));
+    var empty = document.getElementById("palette-empty");
     var active = 0;
     var open = false;
 
@@ -80,6 +82,7 @@ const items = [
         row.hidden = !hit;
         if (hit) visible++;
       });
+      if (empty) empty.hidden = visible !== 0;
       setActive(0);
       return visible;
     }
