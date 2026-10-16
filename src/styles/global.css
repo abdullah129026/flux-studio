@@ -185,6 +185,168 @@ a {
   display: none;
 }
 
+/* ---------- Nav dropdown (Products) ---------- */
+
+.nav-item-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  font-weight: 500;
+  padding: 0.25rem 0;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.nav-dropdown-trigger:hover,
+.nav-item-dropdown[data-open="true"] .nav-dropdown-trigger,
+.nav-dropdown-trigger[aria-current="page"] {
+  color: var(--ink);
+}
+
+.nav-chevron {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.nav-item-dropdown[data-open="true"] .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: -1.25rem;
+  width: 30rem;
+  max-width: calc(100vw - 2rem);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.28);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  z-index: 60;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(var(--drop-x, 0px), 6px);
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base);
+  pointer-events: none;
+}
+
+/* Invisible bridge so the cursor can travel from the button to the card
+   without the panel closing. */
+.nav-dropdown-panel::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+}
+
+.nav-item-dropdown[data-open="true"] .nav-dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0);
+  pointer-events: auto;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    visibility 0s;
+}
+
+.nav-drop-group + .nav-drop-group {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.nav-drop-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 var(--space-2);
+}
+
+.nav-drop-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+a.nav-drop-row {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+a.nav-drop-row:hover {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.nav-drop-name {
+  display: block;
+  font-weight: 600;
+  font-size: var(--text-small);
+  color: var(--ink);
+}
+
+.nav-drop-tag {
+  display: block;
+  font-size: var(--text-small);
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+a.nav-dropdown-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-3) 0;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a.nav-dropdown-footer:hover {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-dropdown-panel {
+    transform: none;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      visibility 0s linear var(--dur-fast);
+  }
+
+  .nav-item-dropdown[data-open="true"] .nav-dropdown-panel {
+    transform: none;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      visibility 0s;
+  }
+
+  .nav-chevron {
+    transition: none;
+  }
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -1562,57 +1724,6 @@ html.js .feed-item.is-in {
   transform: scaleX(0);
 }
 
-/* ---------- Custom cursor ---------- */
-
-.cursor-dot,
-.cursor-ring {
-  display: none;
-}
-
-html.has-cursor,
-html.has-cursor a,
-html.has-cursor button {
-  cursor: none;
-}
-
-html.has-cursor .cursor-dot,
-html.has-cursor .cursor-ring {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 300;
-  pointer-events: none;
-  border-radius: 50%;
-  opacity: 0;
-}
-
-html.has-cursor .cursor-dot.is-live {
-  opacity: 1;
-}
-
-html.has-cursor .cursor-ring {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--accent);
-  transition: scale var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
-}
-
-html.has-cursor .cursor-ring.is-live {
-  opacity: 0.6;
-}
-
-html.has-cursor .cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-}
-
-html.has-cursor .cursor-ring.is-hover {
-  scale: 1.6;
-  opacity: 1;
-}
-
 /* ---------- Header hide on scroll ---------- */
 
 .site-header {
@@ -1650,6 +1761,48 @@ html.has-cursor .cursor-ring.is-hover {
   @view-transition {
     navigation: auto;
   }
+}
+
+/* Keep persistent chrome stable across view transitions. */
+.site-header {
+  view-transition-name: site-header;
+}
+
+.scroll-progress {
+  view-transition-name: scroll-progress;
+}
+
+/* ---------- Motion (Phase 3) ---------- */
+
+/* When Lenis owns scrolling, the CSS smooth scroll must stand down. */
+html.lenis-on {
+  scroll-behavior: auto;
+}
+
+/* Scroll reveals: hidden only while the motion module is live. If the
+   module never loads (or is torn down), content renders in final state. */
+html.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* Split headings: hidden until SplitText stages them in JS. */
+html.motion [data-split] {
+  opacity: 0;
+}
+
+/* Process timeline: the active step lights up as the scrub passes it. */
+.process-step .process-node {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.process-step.is-active .process-node {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* ---------- Stubs ---------- */
@@ -1701,6 +1854,39 @@ html.has-cursor .cursor-ring.is-hover {
     text-decoration: none;
     padding: var(--space-2) 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-submenu {
+    display: grid;
+    gap: 0;
+    padding: var(--space-1) 0 var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-menu a.mobile-submenu-link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-family: var(--font-text);
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--ink-muted);
+    padding: var(--space-2) 0;
+    border-bottom: none;
+  }
+
+  .mobile-menu a.mobile-submenu-link:hover {
+    color: var(--ink);
+  }
+
+  .mobile-submenu-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    white-space: nowrap;
   }
 
   .mobile-menu-close {
@@ -1799,6 +1985,22 @@ html.has-cursor .cursor-ring.is-hover {
   }
 
   html.js .feed-item.is-in {
+    transition: none;
+  }
+
+  /* Phase 3 targets: never hide content, never animate it. */
+  html.motion [data-reveal],
+  html.motion [data-split] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The process timeline reads as a complete static artifact. */
+  .process-progress {
+    height: 100%;
+  }
+
+  .process-step .process-node {
     transition: none;
   }
 

@@ -1,12 +1,22 @@
 ---
 import Wordmark from "./Wordmark.astro";
 import { nav, site } from "../data/site";
+import { products } from "../data/products";
 
 interface Props {
   current?: string;
 }
 
 const { current = "/" } = Astro.props;
+
+const live = products.filter((p) => p.status === "Live");
+const inDev = products.filter((p) => p.status === "In Development");
+const upcoming = products.filter((p) => p.status === "Upcoming");
+const dropGroups = [
+  { label: "Live", items: live },
+  { label: "In development", items: inDev },
+  { label: "Upcoming", items: upcoming },
+];
 ---
 
 <header class="site-header">
@@ -16,11 +26,49 @@ const { current = "/" } = Astro.props;
     </a>
 
     <nav class="site-nav" aria-label="Primary">
-      {nav.map((item) => (
-        <a href={item.href} aria-current={current === item.href ? "page" : undefined}>
-          {item.label}
-        </a>
-      ))}
+      {nav.map((item) =>
+        item.href === "/products" ? (
+          <div class="nav-item-dropdown" data-dropdown data-open="false">
+            <a
+              href={item.href}
+              class="nav-dropdown-trigger"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-current={current === item.href || current.startsWith("/products/") ? "page" : undefined}
+            >
+              {item.label}
+              <svg class="nav-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </a>
+            <div class="nav-dropdown-panel" aria-label="Products">
+              {dropGroups.map((group) => (
+                <div class="nav-drop-group">
+                  <p class="nav-drop-label">{group.label}</p>
+                  <ul>
+                    {group.items.map((p) => (
+                      <li>
+                        <a class="nav-drop-row" href={`/products/${p.slug}`}>
+                          <span class="nav-drop-name">{p.name}</span>
+                          {p.tagline && <span class="nav-drop-tag">{p.tagline}</span>}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <a class="nav-dropdown-footer" href="/products">
+                View all products
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        ) : (
+          <a href={item.href} aria-current={current === item.href ? "page" : undefined}>
+            {item.label}
+          </a>
+        )
+      )}
     </nav>
 
     <div class="header-actions">
@@ -59,7 +107,19 @@ const { current = "/" } = Astro.props;
   <nav aria-label="Mobile">
     <a href="/">Home</a>
     {nav.map((item) => (
-      <a href={item.href}>{item.label}</a>
+      <>
+        <a href={item.href}>{item.label}</a>
+        {item.href === "/products" && (
+          <div class="mobile-submenu" aria-label="Products">
+            {products.map((p) => (
+              <a class="mobile-submenu-link" href={`/products/${p.slug}`}>
+                {p.name}
+                <span class="mobile-submenu-status">{p.status}</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </>
     ))}
     <a href={site.linkedin} rel="me noopener">LinkedIn</a>
   </nav>

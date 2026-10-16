@@ -20,11 +20,11 @@ const details: Record<string, string> = {
     </div>
   </div>
   {featured.map((p, i) => (
-    <article class={`feature-row${i % 2 === 1 ? " is-flipped" : ""}`}>
+    <article class={`feature-row${i % 2 === 1 ? " is-flipped" : ""}`} data-reveal>
       <div class="container feature-row-inner">
-        <p class="feature-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
+        <p class="feature-index" data-parallax aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
         <div class="feature-body">
-          <h2 class="feature-name"><a href={`/products/${p.slug}`}>{p.name}</a></h2>
+          <h2 class="feature-name" data-split><a href={`/products/${p.slug}`}>{p.name}</a></h2>
           {p.tagline && <p class="feature-tagline">{p.tagline}</p>}
           {details[p.slug] && <p class="feature-detail">{details[p.slug]}</p>}
           <p class="feature-links">

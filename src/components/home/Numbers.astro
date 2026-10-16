@@ -22,7 +22,7 @@ const numbers = [
     <dl class="numbers-strip">
       {numbers.map((n) => (
         <div class="number-cell">
-          <dt class="number-value">{n.value}</dt>
+          <dt class="number-value" data-counter>{n.value}</dt>
           <dd class="number-label">{n.label}</dd>
         </div>
       ))}

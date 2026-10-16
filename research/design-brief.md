@@ -44,3 +44,13 @@ Recommendation: **B as the hero** (it is the credibility argument and nothing el
 1. Studio name for the wordmark and AWS resubmission: "Flux Studio" or "FluxyAI"? (One consistent name everywhere.)
 2. Product list: PRISM, Spec2Run, API Contract Firewall, GhostCode confirmed? Trace/PatchPilot listed as upcoming or omitted until real?
 3. Contact email + profiles to link; any real numbers/milestones; any brand color/type leanings.
+
+## Navbar dropdown reference: Resend (owner's corrected spec, 2026-10-16)
+
+The owner corrected the browser-task report from live observation. This is the ground truth spec if we ever adapt it:
+
+- **Trigger:** the dropdown card opens on hover (cursor on the navbar button), not on click.
+- **Persistence:** the card stays open as long as the cursor is on the card itself or on the navbar button.
+- **Positioning:** each dropdown appears below its own corresponding button (anchored per-button, not one shared centered panel).
+- **Switch animation:** moving the cursor from one nav button to another slides the dropdown box horizontally in the direction of travel. Moving left to right (Features to Company), the box slides from right to left into place under the new button. Moving right to left, it slides left to right. The slide is directional, tied to cursor movement.
+- Status: research only. Do NOT implement on the Flux Studio site until the owner explicitly asks.

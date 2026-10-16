@@ -48,6 +48,7 @@ const statuses: Array<"All" | ProductStatus> = ["All", "Live", "In Development",
     {products.map((p) => (
       <li
         class="explorer-item"
+        data-reveal
         data-category={p.category ?? ""}
         data-status={p.status}
       >

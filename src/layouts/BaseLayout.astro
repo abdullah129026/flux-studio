@@ -15,9 +15,13 @@ interface Props {
   current?: string;
   ogImage?: string;
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+  /* Motion mode for the Phase 3 pass: "home" gets the full choreography
+     (process pin, counters, parallax), "detail" gets diagram drawing,
+     "basic" gets reveals + split headings, "none" skips the motion bundle. */
+  motion?: "home" | "detail" | "basic" | "none";
 }
 
-const { title, description = site.tagline, current = "/", ogImage = "/og/home.png", jsonLd } = Astro.props;
+const { title, description = site.tagline, current = "/", ogImage = "/og/home.png", jsonLd, motion = "basic" } = Astro.props;
 const pageTitle = title === site.name ? title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 const ogImageUrl = new URL(ogImage, site.url).toString();
@@ -44,7 +48,7 @@ const allJsonLd = jsonLd
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-motion={motion}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -96,13 +100,11 @@ const allJsonLd = jsonLd
     </main>
     <Footer />
     <CommandPalette />
-    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+    <script>
+      import "../scripts/motion.ts";
+    </script>
     <script is:inline>
       (function () {
-        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var finePointer = window.matchMedia("(pointer: fine)").matches;
-
         // Theme toggle.
         var toggle = document.getElementById("theme-toggle");
         if (toggle) {
@@ -126,9 +128,114 @@ const allJsonLd = jsonLd
           menu.setAttribute("aria-hidden", open ? "false" : "true");
           openBtn.setAttribute("aria-expanded", open ? "true" : "false");
           document.body.style.overflow = open ? "hidden" : "";
+          window.dispatchEvent(new CustomEvent("flux:menu", { detail: { open: open } }));
         }
         if (openBtn) openBtn.addEventListener("click", function () { setMenu(true); });
         if (closeBtn) closeBtn.addEventListener("click", function () { setMenu(false); });
+
+        // Products nav dropdown (Resend-style hover, per the owner's spec).
+        // Opens on hover/focus, stays open while the cursor is on the button
+        // or the card, slides horizontally in the direction of travel when
+        // moving between dropdown buttons. Touch taps toggle, Escape closes.
+        (function () {
+          var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var canHover = window.matchMedia("(hover: hover)").matches;
+          var lastX = null;
+          var closeTimer = null;
+          var openToken = 0;
+
+          function wraps() {
+            return Array.prototype.slice.call(document.querySelectorAll("[data-dropdown]"));
+          }
+
+          function setOpen(wrap, open, dirX) {
+            if (!wrap) return;
+            var trigger = wrap.querySelector(".nav-dropdown-trigger");
+            var panel = wrap.querySelector(".nav-dropdown-panel");
+            if (open) {
+              var slide = !reduceMotion && panel && typeof dirX === "number" && dirX !== 0;
+              if (slide) {
+                // Stage the directional offset instantly while the panel is
+                // still closed (transitions disabled), then open on the next
+                // frame so the slide animates from the correct side.
+                var token = ++openToken;
+                panel.style.setProperty("--drop-x", dirX * 18 + "px");
+                panel.style.transition = "none";
+                void panel.offsetWidth;
+                panel.style.transition = "";
+                requestAnimationFrame(function () {
+                  if (token !== openToken) return;
+                  wrap.setAttribute("data-open", "true");
+                });
+              } else {
+                wrap.setAttribute("data-open", "true");
+              }
+            } else {
+              openToken++;
+              if (panel) panel.style.setProperty("--drop-x", "0px");
+              wrap.setAttribute("data-open", "false");
+            }
+            if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+          }
+
+          function closeAll(except) {
+            wraps().forEach(function (w) { if (w !== except) setOpen(w, false); });
+          }
+
+          function openFrom(wrap) {
+            var r = wrap.getBoundingClientRect();
+            var x = r.left + r.width / 2;
+            var dir = 0;
+            if (lastX !== null && x !== lastX) dir = x > lastX ? 1 : -1;
+            lastX = x;
+            closeAll(wrap);
+            setOpen(wrap, true, dir);
+          }
+
+          wraps().forEach(function (wrap) {
+            var trigger = wrap.querySelector(".nav-dropdown-trigger");
+            if (!trigger) return;
+
+            if (canHover) {
+              wrap.addEventListener("mouseenter", function () {
+                if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+                openFrom(wrap);
+              });
+              wrap.addEventListener("mouseleave", function () {
+                closeTimer = setTimeout(function () { setOpen(wrap, false); }, 120);
+              });
+            } else {
+              // Touch: tap toggles the panel (the trigger link itself stays
+              // reachable through "View all products"; keyboard Enter still
+              // follows the link, e.detail === 0). focusin does not open here
+              // so a tap's focus event cannot race the toggle.
+              trigger.addEventListener("click", function (e) {
+                if (e.detail === 0) return;
+                e.preventDefault();
+                var isOpen = wrap.getAttribute("data-open") === "true";
+                if (isOpen) setOpen(wrap, false);
+                else openFrom(wrap);
+              });
+              document.addEventListener("click", function (e) {
+                if (!wrap.contains(e.target)) setOpen(wrap, false);
+              });
+            }
+
+            wrap.addEventListener("focusin", function () { if (canHover) openFrom(wrap); });
+            wrap.addEventListener("focusout", function (e) {
+              if (!wrap.contains(e.relatedTarget)) setOpen(wrap, false);
+            });
+            wrap.addEventListener("keydown", function (e) {
+              if (e.key === "Escape") {
+                setOpen(wrap, false);
+                trigger.focus();
+              }
+            });
+          });
+
+          // A scrolling page hides the header; never leave a panel floating.
+          window.addEventListener("scroll", function () { closeAll(); }, { passive: true });
+        })();
 
         // Shipping feed stream-in. Items are visible without JS; with JS they
         // enter in sequence, staggered by the --i custom property in CSS.
@@ -174,32 +281,6 @@ const allJsonLd = jsonLd
         }
         window.addEventListener("scroll", onScroll, { passive: true });
         onScrollProgress();
-
-        // Custom cursor: desktop with a fine pointer, motion welcome only.
-        // Native cursor stays until JS confirms the follower is running.
-        if (finePointer && !reduceMotion) {
-          var dot = document.getElementById("cursor-dot");
-          var ring = document.getElementById("cursor-ring");
-          var mx = -100, my = -100, rx = -100, ry = -100;
-          document.documentElement.classList.add("has-cursor");
-          document.addEventListener("mousemove", function (e) {
-            mx = e.clientX;
-            my = e.clientY;
-            if (dot) {
-              dot.classList.add("is-live");
-              dot.style.transform = "translate(" + (mx - 3) + "px," + (my - 3) + "px)";
-            }
-            if (ring) ring.classList.add("is-live");
-            var t = e.target.closest("a, button, input, textarea, [role='button']");
-            if (ring) ring.classList.toggle("is-hover", !!t);
-          });
-          (function follow() {
-            rx += (mx - rx) * 0.16;
-            ry += (my - ry) * 0.16;
-            if (ring) ring.style.transform = "translate(" + (rx - 14) + "px," + (ry - 14) + "px)";
-            requestAnimationFrame(follow);
-          })();
-        }
       })();
     </script>
   </body>

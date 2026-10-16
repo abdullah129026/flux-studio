@@ -50,7 +50,7 @@ const skills = [
 >
   <div class="container page-intro">
     <p class="section-eyebrow">About</p>
-    <h1 class="page-title">One person, building in the open.</h1>
+    <h1 class="page-title" data-split>One person, building in the open.</h1>
   </div>
 
   <div class="container about-story">
@@ -78,7 +78,7 @@ const skills = [
     <p class="section-eyebrow" id="principles-heading">Principles</p>
     <ol class="principles-list">
       {principles.map((pr, i) => (
-        <li class="principle">
+        <li class="principle" data-reveal>
           <span class="principle-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
           <div>
             <h2 class="principle-title">{pr.title}</h2>
