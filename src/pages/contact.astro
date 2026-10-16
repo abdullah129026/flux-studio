@@ -1,15 +1,61 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import { site } from "../data/site";
 ---
 
-<BaseLayout title="Contact" current="/contact" description="Get in touch with Flux Studio.">
-  <div class="container stub">
-    <h1>Contact</h1>
-    <p>
-      Email: <a href={`mailto:${site.email}`}>{site.email}</a><br />
-      LinkedIn: <a href={site.linkedin} rel="me noopener">Muhammad Abdullah Shah</a>
+<BaseLayout
+  title="Contact"
+  current="/contact"
+  description="Get in touch with Flux Studio. Email, LinkedIn, or the contact form."
+  ogImage="/og/contact.png"
+>
+  <div class="container page-intro">
+    <p class="section-eyebrow">Contact</p>
+    <h1 class="page-title">Tell us what you are building.</h1>
+    <p class="page-lede">
+      A project, a collaboration, a question about the work. The form goes to
+      the studio inbox; so does the email address.
     </p>
-    <p style="color: var(--ink-muted);">A proper contact form lands in Phase 2.</p>
+  </div>
+
+  <div class="container contact-grid">
+    <div>
+      <ContactForm />
+    </div>
+    <aside class="contact-aside" aria-label="Direct contact details">
+      <h2 class="contact-aside-heading">Direct</h2>
+      <p class="copy-row">
+        <a href={`mailto:${site.email}`} id="contact-email">{site.email}</a>
+        <button type="button" class="copy-btn" id="copy-email" aria-live="polite">
+          Copy
+        </button>
+      </p>
+      <ul class="footer-nav">
+        <li><a href={site.linkedin} rel="me noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a></li>
+        <li><a href={site.github} rel="me noopener">GitHub <span aria-hidden="true">&nearr;</span></a></li>
+        <li><a href={site.blog.url} rel="noopener">{site.blog.name} (blog) <span aria-hidden="true">&nearr;</span></a></li>
+      </ul>
+      <p class="contact-tz">Based in Pakistan (UTC+5).</p>
+    </aside>
   </div>
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById("copy-email");
+    var link = document.getElementById("contact-email");
+    if (!btn || !link) return;
+    btn.addEventListener("click", function () {
+      var done = function () {
+        btn.textContent = "Copied";
+        setTimeout(function () { btn.textContent = "Copy"; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link.textContent.trim()).then(done, done);
+      } else {
+        done();
+      }
+    });
+  })();
+</script>

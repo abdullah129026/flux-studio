@@ -1,0 +1,43 @@
+---
+// Home section 3: featured products as large editorial rows, not a card grid.
+// One row per product, alternating alignment, giant ghost numerals.
+import { products } from "../../data/products";
+
+const featured = products.filter((p) => p.featured);
+const details: Record<string, string> = {
+  prism: "Paste any public git URL. History renders as a 3D timeline you can scrub.",
+  spec2run: "Typed prompt in, OpenAPI 3.0 spec out, then a FastAPI service running in a sandbox.",
+  "api-contract-firewall":
+    "A Cloudflare Worker proxy that learns JSON schemas from live traffic and blocks breaking deploys.",
+};
+---
+
+<section class="featured" aria-labelledby="featured-heading">
+  <div class="container">
+    <div class="featured-head">
+      <p class="section-eyebrow" id="featured-heading">Featured products</p>
+      <a class="featured-all" href="/products">All products <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+  {featured.map((p, i) => (
+    <article class={`feature-row${i % 2 === 1 ? " is-flipped" : ""}`}>
+      <div class="container feature-row-inner">
+        <p class="feature-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
+        <div class="feature-body">
+          <h2 class="feature-name"><a href={`/products/${p.slug}`}>{p.name}</a></h2>
+          {p.tagline && <p class="feature-tagline">{p.tagline}</p>}
+          {details[p.slug] && <p class="feature-detail">{details[p.slug]}</p>}
+          <p class="feature-links">
+            <a href={`/products/${p.slug}`}>Open product <span aria-hidden="true">&rarr;</span></a>
+            {p.links?.live && (
+              <a href={p.links.live} rel="noopener">Live <span aria-hidden="true">&nearr;</span></a>
+            )}
+            {p.links?.github && (
+              <a href={p.links.github} rel="noopener">GitHub <span aria-hidden="true">&nearr;</span></a>
+            )}
+          </p>
+        </div>
+      </div>
+    </article>
+  ))}
+</section>

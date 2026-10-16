@@ -1,7 +1,7 @@
 /* Product data: the single source of truth for every product surface.
    Rules: only include what the owner provided or what is publicly verifiable.
    Omit a field when it is unknown; the UI must degrade gracefully.
-   Copy marked DRAFT needs owner review before launch. */
+   Copy approved by the owner, 2026-10-16. */
 
 export type ProductStatus = "Live" | "Beta" | "In Development" | "Upcoming" | "Open Source";
 export type ProductCategory = "AI" | "Full-Stack" | "Developer Tool";
@@ -37,7 +37,6 @@ export const products: Product[] = [
     tagline: "Explore any repo's history as a 3D timeline.",
     category: "AI",
     status: "Live",
-    // DRAFT copy: owner to review.
     summary:
       "Paste a git URL and PRISM clones it, parses every commit, and renders the history as an interactive 3D timeline. Select any commit to inspect what it changed and why.",
     problem:
@@ -65,7 +64,6 @@ export const products: Product[] = [
     tagline: "Type your API into existence.",
     category: "AI",
     status: "Live",
-    // DRAFT copy: owner to review.
     summary:
       "Describe an API in plain English and get a live, deployed microservice. Prompt Studio on the left, live Swagger, generated code, diffs, and logs on the right.",
     problem:
@@ -95,7 +93,6 @@ export const products: Product[] = [
     tagline: "Contract testing without writing contracts.",
     category: "Developer Tool",
     status: "Live",
-    // DRAFT copy: owner to review.
     summary:
       "A Cloudflare Worker forward proxy that watches your API traffic, learns the JSON schemas your endpoints actually return, and blocks deploys that would break them.",
     problem:
@@ -125,7 +122,6 @@ export const products: Product[] = [
     tagline: "Turns dead code into a P&L statement.",
     category: "Developer Tool",
     status: "In Development",
-    // DRAFT copy: owner to review.
     summary:
       "AST-based analysis that maps your codebase into a dependency graph, finds the code nothing calls, and prices it: lines of dead code times complexity, in dollars.",
     problem:
@@ -154,7 +150,6 @@ export const products: Product[] = [
     tagline: "Version control for .env files.",
     category: "Developer Tool",
     status: "In Development",
-    // DRAFT copy: owner to review.
     summary:
       "History, diff, one-click rollback, auto-sync, and an audit log for environment files. The config changes nobody reviews, finally reviewable.",
     problem:
@@ -183,7 +178,7 @@ export const products: Product[] = [
     tagline: "API-first promotion infrastructure for indie SaaS.",
     category: "Full-Stack",
     status: "In Development",
-    // DRAFT copy: owner to review. GitHub repo is private, so no link.
+    // Note: GitHub repo is private, so no link.
     summary:
       "Coupons, gift cards, referrals, loyalty, and fraud controls behind one API. The promotion layer every SaaS rebuilds, done once.",
     problem:

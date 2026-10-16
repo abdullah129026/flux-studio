@@ -1,0 +1,173 @@
+---
+// Products index explorer: category + status filters, list/grid toggle,
+// deep-linkable via URL query params. Filtering is client-side; all items
+// render server-side so the page works without JS (filters just do nothing).
+import { products, type ProductCategory, type ProductStatus } from "../data/products";
+
+const categories: Array<"All" | ProductCategory> = ["All", "AI", "Full-Stack", "Developer Tool"];
+const statuses: Array<"All" | ProductStatus> = ["All", "Live", "In Development", "Upcoming"];
+---
+
+<div class="explorer" id="explorer">
+  <div class="explorer-bar">
+    <div class="filter-group" role="group" aria-label="Filter by category">
+      {categories.map((c) => (
+        <button
+          type="button"
+          class="filter-pill"
+          data-filter="category"
+          data-value={c}
+          aria-pressed={c === "All"}
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+    <div class="filter-group" role="group" aria-label="Filter by status">
+      {statuses.map((s) => (
+        <button
+          type="button"
+          class="filter-pill"
+          data-filter="status"
+          data-value={s}
+          aria-pressed={s === "All"}
+        >
+          {s}
+        </button>
+      ))}
+    </div>
+    <div class="view-toggle" role="group" aria-label="Change view">
+      <button type="button" class="filter-pill" data-view="list" aria-pressed="true">List</button>
+      <button type="button" class="filter-pill" data-view="grid" aria-pressed="false">Grid</button>
+    </div>
+  </div>
+
+  <p class="explorer-count" id="explorer-count" aria-live="polite"></p>
+
+  <ul class="explorer-items is-list" id="explorer-items">
+    {products.map((p) => (
+      <li
+        class="explorer-item"
+        data-category={p.category ?? ""}
+        data-status={p.status}
+      >
+        <span class={`status-badge${p.status === "Live" ? " is-live" : ""}`}>{p.status}</span>
+        <h2 class="product-name">
+          <a href={`/products/${p.slug}`}>{p.name}</a>
+        </h2>
+        <p class="product-tagline">
+          {p.tagline ?? "In the pipeline. Details when there is something real to show."}
+        </p>
+        {p.techStack && (
+          <ul class="stack-chips" aria-label="Technology stack">
+            {p.techStack.slice(0, 4).map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        )}
+        <p class="explorer-links">
+          <a href={`/products/${p.slug}`}>Open product <span aria-hidden="true">&rarr;</span></a>
+          {p.links?.live && (
+            <a href={p.links.live} rel="noopener">Live <span aria-hidden="true">&nearr;</span></a>
+          )}
+          {p.links?.github && (
+            <a href={p.links.github} rel="noopener">GitHub <span aria-hidden="true">&nearr;</span></a>
+          )}
+        </p>
+      </li>
+    ))}
+  </ul>
+
+  <p class="explorer-empty" id="explorer-empty" hidden>
+    Nothing matches those filters. <button type="button" id="explorer-reset">Clear them.</button>
+  </p>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.getElementById("explorer");
+    if (!root) return;
+    var items = Array.prototype.slice.call(root.querySelectorAll(".explorer-item"));
+    var list = document.getElementById("explorer-items");
+    var count = document.getElementById("explorer-count");
+    var empty = document.getElementById("explorer-empty");
+    var reset = document.getElementById("explorer-reset");
+
+    var validCategories = ["All", "AI", "Full-Stack", "Developer Tool"];
+    var validStatuses = ["All", "Live", "Beta", "In Development", "Upcoming", "Open Source"];
+    var validViews = ["list", "grid"];
+
+    function readParams() {
+      var q = new URLSearchParams(window.location.search);
+      var category = q.get("category");
+      var status = q.get("status");
+      var view = q.get("view");
+      return {
+        category: validCategories.indexOf(category) !== -1 ? category : "All",
+        status: validStatuses.indexOf(status) !== -1 ? status : "All",
+        view: validViews.indexOf(view) !== -1 ? view : "list",
+      };
+    }
+
+    function writeParams(state) {
+      var q = new URLSearchParams();
+      if (state.category !== "All") q.set("category", state.category);
+      if (state.status !== "All") q.set("status", state.status);
+      if (state.view !== "list") q.set("view", state.view);
+      var url = window.location.pathname + (q.toString() ? "?" + q.toString() : "");
+      window.history.replaceState(null, "", url);
+    }
+
+    function apply(state) {
+      var shown = 0;
+      items.forEach(function (item) {
+        var okCat = state.category === "All" || item.getAttribute("data-category") === state.category;
+        var okStatus = state.status === "All" || item.getAttribute("data-status") === state.status;
+        var show = okCat && okStatus;
+        item.hidden = !show;
+        if (show) shown++;
+      });
+      list.classList.toggle("is-grid", state.view === "grid");
+      list.classList.toggle("is-list", state.view !== "grid");
+      count.textContent = shown === items.length
+        ? "Showing all " + items.length + " products."
+        : "Showing " + shown + " of " + items.length + " products.";
+      empty.hidden = shown !== 0;
+      root.querySelectorAll('[data-filter="category"]').forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-value") === state.category));
+      });
+      root.querySelectorAll('[data-filter="status"]').forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-value") === state.status));
+      });
+      root.querySelectorAll("[data-view]").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-view") === state.view));
+      });
+    }
+
+    var state = readParams();
+
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("button");
+      if (!t) return;
+      if (t.hasAttribute("data-filter")) {
+        state[t.getAttribute("data-filter")] = t.getAttribute("data-value");
+      } else if (t.hasAttribute("data-view")) {
+        state.view = t.getAttribute("data-view");
+      } else {
+        return;
+      }
+      writeParams(state);
+      apply(state);
+    });
+
+    if (reset) {
+      reset.addEventListener("click", function () {
+        state = { category: "All", status: "All", view: state.view };
+        writeParams(state);
+        apply(state);
+      });
+    }
+
+    apply(state);
+  })();
+</script>

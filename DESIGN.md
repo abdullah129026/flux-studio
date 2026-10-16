@@ -93,9 +93,9 @@ Phase 3 motion: content first, animation as enhancement.
 ## Layout
 
 - **Header:** sticky, blurred, hairline bottom border. Wordmark, nav (Products,
-  Changelog, About, Contact), theme toggle (persisted to localStorage, OS default
-  on first visit), primary CTA. Mobile: hamburger opens a full-screen menu.
-  Hide-on-scroll-down behavior is a Phase 3 addition.
+  Changelog, About, Contact), command-palette trigger, theme toggle (persisted
+  to localStorage, OS default on first visit), primary CTA. Hides on scroll
+  down, reveals on scroll up (Phase 2). Mobile: hamburger opens a full-screen menu.
 - **Footer:** wordmark, studio statement, Studio nav, Elsewhere links (LinkedIn,
   GitHub, email, Flux Reviews blog), copyright base row.
 - **Home (Phase 1):** hero only. Sections 2-7 of the brief's home spec
@@ -106,8 +106,8 @@ Phase 3 motion: content first, animation as enhancement.
 
 - `src/data/products.ts`: typed product records, the single source of truth.
   Fields are optional; missing data degrades gracefully (e.g. Upcoming products
-  render name and status only). Copy drafted in studio voice is marked DRAFT for
-  owner review. promostack has no GitHub link (private repo, by owner instruction).
+  render name and status only). Copy drafted in studio voice, approved by the
+  owner 2026-10-16. promostack has no GitHub link (private repo, by owner instruction).
 - `src/data/shipping.ts`: the shipping log. Rule: every entry must be real and
   verifiable; nothing speculative goes in.
 - `src/data/site.ts`: identity, contacts, nav, blog slot (Flux Reviews is a link,
@@ -125,9 +125,47 @@ Phase 3 motion: content first, animation as enhancement.
 
 ## Open items for Phase 2
 
-- Home sections 2-7; product detail template (`/products/[slug]`); real About,
-  Contact (form via static provider), and Changelog pages; custom 404 polish.
-- Optical pass on the wordmark x; accent color final confirmation against renders.
+Done in Phase 2 (2026-10-16):
+
+- Home sections 2-7: Pillars (two-column split), Featured (numbered editorial
+  rows, alternating), Capabilities (definition rows with concrete proof),
+  Process (vertical timeline, progress bar is motion-ready for Phase 3),
+  Numbers (real counts only: 3 live, 3 in development, 2 upcoming, 106
+  Spec2Run tests), Final CTA. Each section uses a different composition.
+- Product detail template (`/products/[slug]`): hero, problem, what-it-is,
+  how-it-works stepper, code-drawn SVG pipeline diagram (illustrative, marked
+  in a comment), features, stack, prev/next nav, per-product SEO + OG,
+  SoftwareApplication JSON-LD. Upcoming products degrade gracefully.
+- Products index: category + status filters, list/grid toggle, deep-linkable
+  via query params, client-side, all items server-rendered (works without JS).
+- About: honest founder-led story, 5 principles with concrete examples,
+  working stack, real timeline from the shipping log, profile links.
+- Contact: Web3Forms (see below), validation, inline errors, honeypot,
+  success/failure states, copy-email button, direct links.
+- Changelog: full shipping-log page. 404: custom, on-brand.
+- Global: header hides on scroll down / reveals on up; custom cursor
+  (fine pointer + no-preference only, native cursor until JS runs);
+  cross-document view transitions via CSS `@view-transition` gated on
+  `prefers-reduced-motion: no-preference` (fallback is instant navigation);
+  Cmd/Ctrl+K command palette (pages + products, keyboard navigable);
+  scroll progress bar; skip link.
+- SEO: canonical, per-page title/meta/OG, 1200x630 PNG OG cards generated in
+  code (`scripts/og.mjs` + `scripts/og-rasterize.mjs`), twitter large cards,
+  Organization + WebSite JSON-LD globally, sitemap via @astrojs/sitemap 3.7.4,
+  robots.txt, webmanifest, favicons.
+
+## Contact form provider
+
+Chosen: **Web3Forms**. Free, no account needed, plain JSON POST from the
+browser, supports a honeypot field, returns success/failure as JSON. The
+access key ships as the `PUBLIC_WEB3FORMS_KEY` build-time env var; without
+it the form shows an honest "not connected yet" note and the mailto fallback.
+Formspree was rejected (account required, free tier caps submissions);
+Netlify Forms was rejected (only works on Netlify hosting; the site targets
+Vercel). Setup steps are in README.md.
+
+## Open items for Phase 3
+
 - Motion pass (GSAP ScrollTrigger + Lenis), then reduced-motion audit.
-- OG images per page/product, JSON-LD, sitemap.xml generation, Lighthouse QA.
-- Contact form provider choice (Formspree vs Web3Forms) with owner.
+- Optical pass on the wordmark x against rendered type.
+- Lighthouse QA on the production build; responsive spot-checks.

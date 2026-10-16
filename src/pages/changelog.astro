@@ -3,12 +3,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { shippingLog } from "../data/shipping";
 ---
 
-<BaseLayout title="Changelog" current="/changelog" description="The Flux Studio shipping log: dated, verifiable milestones.">
-  <div class="container" style="padding: var(--space-16) 0;">
-    <h1>Changelog</h1>
-    <p style="color: var(--ink-muted); max-width: var(--measure);">
-      A dated record of what shipped. Every entry links to its source.
-    </p>
+<BaseLayout
+  title="Changelog"
+  current="/changelog"
+  description="The Flux Studio shipping log: dated, verifiable milestones."
+  ogImage="/og/changelog.png"
+>
+  <div class="container page-intro">
+    <p class="section-eyebrow">Changelog</p>
+    <h1 class="page-title">A dated record of what shipped.</h1>
+    <p class="page-lede">Every entry links to its source. Nothing here is a plan or a promise.</p>
+  </div>
+  <div class="container" style="padding-bottom: var(--space-16);">
     <ul class="feed-list" style="margin-top: var(--space-8);">
       {shippingLog.map((entry, i) => (
         <li class="feed-item" style={`--i: ${i}`}>

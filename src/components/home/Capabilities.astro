@@ -1,0 +1,44 @@
+---
+// Home section 4: capabilities as definition rows. Each names the strength
+// and one concrete proof, no logo spam.
+const capabilities = [
+  {
+    term: "LLM applications",
+    proof: "Spec2Run drafts OpenAPI specs through Groq function calling, then generates the service.",
+  },
+  {
+    term: "Code intelligence",
+    proof: "GhostCode parses Python and TypeScript with tree-sitter into a NetworkX dependency graph.",
+  },
+  {
+    term: "APIs and backends",
+    proof: "FastAPI and SQLAlchemy on Render, Neon Postgres, Cloudflare Workers at the edge.",
+  },
+  {
+    term: "Frontend engineering",
+    proof: "Next.js and Astro in TypeScript. Self-hosted variable fonts, no font CDN.",
+  },
+  {
+    term: "Traffic and data",
+    proof: "The Contract Firewall watches live API traffic for schema drift and latency regressions.",
+  },
+  {
+    term: "Shipping discipline",
+    proof: "Tests green on every commit. Dated changelog entries, public repos.",
+  },
+];
+---
+
+<section class="capabilities" aria-labelledby="capabilities-heading">
+  <div class="container">
+    <p class="section-eyebrow" id="capabilities-heading">What we are good at</p>
+    <dl class="cap-list">
+      {capabilities.map((c) => (
+        <div class="cap-row">
+          <dt class="cap-term">{c.term}</dt>
+          <dd class="cap-proof">{c.proof}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

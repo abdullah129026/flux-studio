@@ -21,10 +21,42 @@ npm run preview  # preview the production build locally
 npm run check    # typecheck (astro check)
 ```
 
+## OG images
+
+Branded 1200x630 cards live in `public/og/` (PNGs are referenced by the
+meta tags; SVGs are the editable source). Regenerate after changing titles,
+taglines, or the brand:
+
+```bash
+node scripts/og.mjs              # SVGs from the card data in the script
+python3 scripts/og-rasterize.py  # SVGs to PNGs (needs Python Playwright + headless shell)
+```
+
+Keep `scripts/og.mjs` in sync with `src/data/products.ts` when product
+names or taglines change.
+
 ## Deploy
 
 Vercel: import the repo, framework preset Astro, build command `npm run build`,
-output directory `dist`. No adapter or environment variables needed.
+output directory `dist`. No adapter needed.
+
+### Environment variables
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `PUBLIC_WEB3FORMS_KEY` | No | Access key for the contact form (see below). Without it, the form shows a "not connected yet" note and visitors use the mailto link. |
+
+### Contact form setup (Web3Forms, one time)
+
+1. Go to https://web3forms.com and get a free access key (no account needed).
+   It is tied to the email that receives the messages.
+2. In the Vercel project: Settings, Environment Variables, add
+   `PUBLIC_WEB3FORMS_KEY` with the key, then redeploy.
+3. For local testing, create a `.env` file (never committed) with
+   `PUBLIC_WEB3FORMS_KEY=your-key-here` and run `npm run dev`.
+
+The form includes a honeypot field, client-side validation with inline
+errors, and success/failure states.
 
 ## Project structure
 

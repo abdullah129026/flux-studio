@@ -1,0 +1,218 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products, type Product } from "../../data/products";
+import { site } from "../../data/site";
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product: p } = Astro.props;
+const index = products.findIndex((x) => x.slug === p.slug);
+const prev = products[(index - 1 + products.length) % products.length];
+const next = products[(index + 1) % products.length];
+
+const description = p.tagline
+  ? `${p.name}: ${p.tagline}`
+  : `${p.name}, a Flux Studio product (${p.status}).`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: p.name,
+  applicationCategory: p.category ?? "DeveloperApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  ...(p.links?.live ? { url: p.links.live } : {}),
+};
+
+// Architecture diagram: nodes drawn in code from the how-it-works steps.
+// Illustrative, not a screenshot. Horizontal chain on desktop.
+const steps = p.howItWorks ?? [];
+const nodeW = 220;
+const gap = 90;
+const diagramW = steps.length * nodeW + (steps.length - 1) * gap;
+
+// Wrap a step into at most two short lines for the diagram node.
+function wrapLabel(s: string): [string, string] {
+  const words = s.split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const w of words) {
+    if ((current + " " + w).trim().length > 20 && current) {
+      lines.push(current);
+      current = w;
+      if (lines.length === 2) break;
+    } else {
+      current = (current + " " + w).trim();
+    }
+  }
+  if (lines.length < 2 && current) lines.push(current);
+  let second = lines[1] ?? "";
+  if (lines.length === 2 && words.join(" ").length > (lines[0] + " " + second).length) {
+    second = second.replace(/\.?$/, "...");
+  }
+  return [lines[0] ?? "", second];
+}
+---
+
+<BaseLayout
+  title={p.name}
+  current="/products"
+  description={description}
+  ogImage={`/og/product-${p.slug}.png`}
+  jsonLd={jsonLd}
+>
+  <article class="container product-detail">
+    <header class="pd-hero">
+      <p>
+        <span class={`status-badge${p.status === "Live" ? " is-live" : ""}`}>{p.status}</span>
+        {p.category && <span class="pd-category">{p.category}</span>}
+      </p>
+      <h1 class="pd-name">{p.name}</h1>
+      {p.tagline && <p class="pd-tagline">{p.tagline}</p>}
+      {(p.links?.live || p.links?.github || p.links?.demo || p.links?.docs) && (
+        <p class="pd-links">
+          {p.links?.live && (
+            <a class="btn btn-primary" href={p.links.live} rel="noopener">
+              Open live <span aria-hidden="true">&nearr;</span>
+            </a>
+          )}
+          {p.links?.github && (
+            <a class="btn btn-ghost" href={p.links.github} rel="noopener">
+              GitHub <span aria-hidden="true">&nearr;</span>
+            </a>
+          )}
+          {p.links?.demo && (
+            <a class="btn btn-ghost" href={p.links.demo} rel="noopener">
+              Demo <span aria-hidden="true">&nearr;</span>
+            </a>
+          )}
+          {p.links?.docs && (
+            <a class="btn btn-ghost" href={p.links.docs} rel="noopener">
+              Docs <span aria-hidden="true">&nearr;</span>
+            </a>
+          )}
+        </p>
+      )}
+    </header>
+
+    {p.summary && (
+      <section class="pd-section" aria-labelledby="pd-summary">
+        <p class="section-eyebrow" id="pd-summary">What it is</p>
+        <p class="pd-lede">{p.summary}</p>
+      </section>
+    )}
+
+    {p.problem && (
+      <section class="pd-section" aria-labelledby="pd-problem">
+        <p class="section-eyebrow" id="pd-problem">The problem</p>
+        <p class="pd-lede">{p.problem}</p>
+      </section>
+    )}
+
+    {steps.length > 0 && (
+      <section class="pd-section" aria-labelledby="pd-how">
+        <p class="section-eyebrow" id="pd-how">How it works</p>
+        <ol class="pd-steps">
+          {steps.map((s, i) => (
+            <li class="pd-step">
+              <span class="process-node" aria-hidden="true">{i + 1}</span>
+              <p>{s}</p>
+            </li>
+          ))}
+        </ol>
+
+        <figure class="pd-diagram" aria-label={`Architecture diagram for ${p.name}`}>
+          {/* Illustrative diagram drawn in code from the steps above, not a screenshot. */}
+          <svg
+            viewBox={`0 0 ${diagramW} 190`}
+            role="img"
+            aria-label={`${p.name} pipeline diagram`}
+            class="pd-diagram-svg"
+          >
+            {steps.map((s, i) => {
+              const x = i * (nodeW + gap);
+              const [line1, line2] = wrapLabel(s);
+              return (
+                <g>
+                  {i > 0 && (
+                    <g class="pd-edge">
+                      <line x1={x - gap + 14} y1="55" x2={x - 14} y2="55" />
+                      <path d={`M ${x - 14} 55 l -9 -5 v 10 z`} />
+                    </g>
+                  )}
+                  <rect
+                    x={x}
+                    y="20"
+                    width={nodeW}
+                    height="70"
+                    rx="10"
+                    class="pd-node-box"
+                  />
+                  <text x={x + 18} y="50" class="pd-node-num">
+                    {String(i + 1).padStart(2, "0")}
+                  </text>
+                  <text x={x + 18} y="72" class="pd-node-label">
+                    {line1}
+                    {line2 && <tspan x={x + 18} dy="17">{line2}</tspan>}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+          <figcaption>Pipeline, drawn from the steps above.</figcaption>
+        </figure>
+      </section>
+    )}
+
+    {p.keyFeatures && p.keyFeatures.length > 0 && (
+      <section class="pd-section" aria-labelledby="pd-features">
+        <p class="section-eyebrow" id="pd-features">Features</p>
+        <dl class="cap-list">
+          {p.keyFeatures.map((f) => (
+            <div class="cap-row">
+              <dt class="cap-term">{f.title}</dt>
+              <dd class="cap-proof">{f.description}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {p.techStack && p.techStack.length > 0 && (
+      <section class="pd-section" aria-labelledby="pd-stack">
+        <p class="section-eyebrow" id="pd-stack">Stack</p>
+        <ul class="stack-chips pd-stack" aria-label="Technology stack">
+          {p.techStack.map((t) => (
+            <li>{t}</li>
+          ))}
+        </ul>
+        {p.architectureNote && <p class="pd-note">{p.architectureNote}</p>}
+      </section>
+    )}
+
+    {!p.summary && !p.problem && (
+      <section class="pd-section">
+        <p class="pd-lede" style="color: var(--ink-muted);">
+          In the pipeline. This page gets the full treatment when there is something real to show.
+        </p>
+      </section>
+    )}
+
+    <nav class="pd-pager" aria-label="More products">
+      <a class="pd-pager-link" href={`/products/${prev.slug}`}>
+        <span class="pd-pager-dir">&larr; Previous</span>
+        <span class="pd-pager-name">{prev.name}</span>
+      </a>
+      <a class="pd-pager-link is-next" href={`/products/${next.slug}`}>
+        <span class="pd-pager-dir">Next &rarr;</span>
+        <span class="pd-pager-name">{next.name}</span>
+      </a>
+    </nav>
+  </article>
+</BaseLayout>

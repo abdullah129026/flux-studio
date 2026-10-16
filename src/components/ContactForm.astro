@@ -1,0 +1,139 @@
+---
+// Contact form: posts to Web3Forms (free, AJAX, no backend).
+// The access key comes from the PUBLIC_WEB3FORMS_KEY env var at build time.
+// The key itself is the owner's step; see README for setup.
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+const configured = accessKey.length > 0 && accessKey !== "PASTE_YOUR_KEY_HERE";
+---
+
+<form
+  class="contact-form"
+  id="contact-form"
+  data-access-key={accessKey}
+  data-configured={String(configured)}
+  novalidate
+>
+  <div class="field">
+    <label for="cf-name">Name</label>
+    <input id="cf-name" name="name" type="text" autocomplete="name" required />
+    <p class="field-error" id="cf-name-error" hidden>Tell us your name.</p>
+  </div>
+  <div class="field">
+    <label for="cf-email">Email</label>
+    <input id="cf-email" name="email" type="email" autocomplete="email" required />
+    <p class="field-error" id="cf-email-error" hidden>That email does not look right.</p>
+  </div>
+  <div class="field">
+    <label for="cf-message">What are you building?</label>
+    <textarea id="cf-message" name="message" rows="6" required></textarea>
+    <p class="field-error" id="cf-message-error" hidden>Give us a sentence or two.</p>
+  </div>
+
+  {/* Honeypot: real users never see it, bots fill it in. */}
+  <div class="field honeypot" aria-hidden="true">
+    <label for="cf-company">Company</label>
+    <input id="cf-company" name="botcheck" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <button class="btn btn-primary btn-large" type="submit" id="cf-submit">
+    Send message
+  </button>
+  <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+  {!configured && (
+    <p class="form-note">
+      The form is not connected yet. Email directly instead, it reaches the same inbox.
+    </p>
+  )}
+</form>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById("contact-form");
+    if (!form) return;
+    var configured = form.getAttribute("data-configured") === "true";
+    var accessKey = form.getAttribute("data-access-key") || "";
+    var status = document.getElementById("cf-status");
+    var submit = document.getElementById("cf-submit");
+
+    var fields = [
+      {
+        input: document.getElementById("cf-name"),
+        error: document.getElementById("cf-name-error"),
+        valid: function (v) { return v.trim().length > 0; },
+      },
+      {
+        input: document.getElementById("cf-email"),
+        error: document.getElementById("cf-email-error"),
+        valid: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
+      },
+      {
+        input: document.getElementById("cf-message"),
+        error: document.getElementById("cf-message-error"),
+        valid: function (v) { return v.trim().length >= 10; },
+      },
+    ];
+
+    function setError(f, bad) {
+      f.error.hidden = !bad;
+      f.input.setAttribute("aria-invalid", bad ? "true" : "false");
+      f.input.classList.toggle("is-invalid", bad);
+    }
+
+    fields.forEach(function (f) {
+      f.input.addEventListener("input", function () { setError(f, false); });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var honey = document.getElementById("cf-company");
+      if (honey && honey.value) return; // bot
+
+      var allOk = true;
+      fields.forEach(function (f) {
+        var bad = !f.valid(f.input.value);
+        setError(f, bad);
+        if (bad) allOk = false;
+      });
+      if (!allOk) {
+        status.textContent = "Fix the highlighted fields and try again.";
+        return;
+      }
+      if (!configured) {
+        status.textContent = "The form is not connected yet. Please email directly.";
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = "Sending...";
+      status.textContent = "";
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: fields[0].input.value.trim(),
+          email: fields[1].input.value.trim(),
+          message: fields[2].input.value.trim(),
+          subject: "Flux Studio contact form",
+          from_name: "Flux Studio website",
+        }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.success) {
+            form.reset();
+            status.textContent = "Message sent. We reply within a couple of days.";
+            submit.textContent = "Sent";
+          } else {
+            throw new Error("rejected");
+          }
+        })
+        .catch(function () {
+          status.textContent = "Something went wrong sending that. Email us directly instead.";
+          submit.disabled = false;
+          submit.textContent = "Send message";
+        });
+    });
+  })();
+</script>

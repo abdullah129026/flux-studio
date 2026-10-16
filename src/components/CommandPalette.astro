@@ -1,0 +1,135 @@
+---
+// Command palette: Ctrl/Cmd+K jumps to any page or product.
+// Vanilla JS, keyboard navigable, no dependencies.
+import { products } from "../data/products";
+
+const pages = [
+  { label: "Home", hint: "Studio", href: "/" },
+  { label: "Products", hint: "Page", href: "/products" },
+  { label: "Changelog", hint: "Page", href: "/changelog" },
+  { label: "About", hint: "Page", href: "/about" },
+  { label: "Contact", hint: "Page", href: "/contact" },
+];
+
+const items = [
+  ...pages,
+  ...products.map((p) => ({
+    label: p.name,
+    hint: p.status,
+    href: `/products/${p.slug}`,
+  })),
+];
+---
+
+<div class="palette-backdrop" id="palette-backdrop" hidden>
+  <div
+    class="palette"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Jump to a page or product"
+  >
+    <input
+      id="palette-input"
+      type="text"
+      placeholder="Jump to..."
+      aria-label="Jump to a page or product"
+      autocomplete="off"
+    />
+    <ul class="palette-list" id="palette-list" role="listbox" aria-label="Results">
+      {items.map((item, i) => (
+        <li role="option" aria-selected={i === 0 ? "true" : "false"} data-index={i}>
+          <a href={item.href} data-href={item.href} tabindex="-1">
+            <span class="palette-label">{item.label}</span>
+            <span class="palette-hint">{item.hint}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="palette-foot">
+      <kbd>↑</kbd><kbd>↓</kbd> move · <kbd>↵</kbd> open · <kbd>esc</kbd> close
+    </p>
+  </div>
+</div>
+
+<script is:inline define:vars={{ items }}>
+  (function () {
+    var backdrop = document.getElementById("palette-backdrop");
+    var trigger = document.getElementById("palette-trigger");
+    var input = document.getElementById("palette-input");
+    var list = document.getElementById("palette-list");
+    var rows = Array.prototype.slice.call(list.querySelectorAll("li"));
+    var active = 0;
+    var open = false;
+
+    function setActive(i) {
+      active = (i + rows.length) % rows.length;
+      rows.forEach(function (row, j) {
+        var on = j === active;
+        row.setAttribute("aria-selected", String(on));
+        row.classList.toggle("is-active", on);
+        if (on) row.scrollIntoView({ block: "nearest" });
+      });
+    }
+
+    function filter(q) {
+      q = q.trim().toLowerCase();
+      var visible = 0;
+      rows.forEach(function (row) {
+        var item = items[Number(row.getAttribute("data-index"))];
+        var hit = !q || item.label.toLowerCase().indexOf(q) !== -1;
+        row.hidden = !hit;
+        if (hit) visible++;
+      });
+      setActive(0);
+      return visible;
+    }
+
+    function show() {
+      open = true;
+      backdrop.hidden = false;
+      input.value = "";
+      filter("");
+      setTimeout(function () { input.focus(); }, 0);
+      document.body.style.overflow = "hidden";
+    }
+
+    function hide() {
+      open = false;
+      backdrop.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    function go() {
+      var row = rows[active];
+      if (row && !row.hidden) {
+        var href = row.querySelector("a").getAttribute("data-href");
+        hide();
+        window.location.href = href;
+      }
+    }
+
+    if (trigger) trigger.addEventListener("click", show);
+    backdrop.addEventListener("click", function (e) {
+      if (e.target === backdrop) hide();
+    });
+    document.addEventListener("keydown", function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        open ? hide() : show();
+        return;
+      }
+      if (!open) return;
+      if (e.key === "Escape") hide();
+      else if (e.key === "ArrowDown") { e.preventDefault(); setActive(active + 1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
+      else if (e.key === "Enter") { e.preventDefault(); go(); }
+    });
+    input.addEventListener("input", function () { filter(input.value); });
+    list.addEventListener("click", function (e) {
+      var a = e.target.closest("a");
+      if (a) { e.preventDefault(); hide(); window.location.href = a.getAttribute("data-href"); }
+    });
+
+    setActive(0);
+  })();
+</script>

@@ -1,10 +1,128 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { shippingLog } from "../data/shipping";
+import { site } from "../data/site";
+
+const principles = [
+  {
+    title: "Ship in the open",
+    text: "Every repository is public unless a client says otherwise. Every milestone is dated in the changelog, with a link. If it cannot be shown, it does not count.",
+  },
+  {
+    title: "Specific beats vague",
+    text: "No adjectives without numbers. 106 out of 106 tests passing, not high quality. A dated entry, not ongoing excellence.",
+  },
+  {
+    title: "Tests stay green",
+    text: "Nothing ships on a red suite. Each build keeps a daily log of commits and test counts, and the log is public.",
+  },
+  {
+    title: "Boring over clever",
+    text: "Standard tools, minimum code, no unrequested abstractions. Clever is a liability the next time the code is read at midnight.",
+  },
+  {
+    title: "One thing at a time",
+    text: "Five products, built in sequence, one week each. No parallel half-finished work competing for attention.",
+  },
+];
+
+const skills = [
+  "TypeScript",
+  "Python",
+  "Next.js",
+  "Astro",
+  "FastAPI",
+  "PostgreSQL",
+  "LLM APIs",
+  "RAG",
+  "Cloudflare Workers",
+  "Docker",
+  "Render",
+  "Vercel",
+];
 ---
 
-<BaseLayout title="About" current="/about" description="About Flux Studio, an independent software studio.">
-  <div class="container stub">
-    <h1>About</h1>
-    <p>This page is being written. The short version: Flux Studio is an independent software studio building AI products and full-stack applications, from idea to production.</p>
+<BaseLayout
+  title="About"
+  current="/about"
+  description="Flux Studio is an independent software studio run by Muhammad Abdullah Shah, a student-engineer building AI products and full-stack applications in the open."
+  ogImage="/og/about.png"
+>
+  <div class="container page-intro">
+    <p class="section-eyebrow">About</p>
+    <h1 class="page-title">One person, building in the open.</h1>
   </div>
+
+  <div class="container about-story">
+    <p class="pd-lede">
+      Flux Studio is run by Muhammad Abdullah Shah, a BS Computer Science
+      student at Abdul Wali Khan University Mardan (class of 2027) who works
+      as a backend developer at Zyroo.
+    </p>
+    <p>
+      The studio is how he is becoming a full-stack and AI engineer: by
+      scoping real products, building them in sequence, testing them properly,
+      shipping them to public URLs, and writing up what happened. There is no
+      agency here, no team page, no account managers. What you see on this
+      site is the work itself.
+    </p>
+    <p>
+      The current sequence is five products: PRISM, Spec2Run, GhostCode,
+      Trace, and PatchPilot. Along the way, the tooling that proved useful
+      became products of its own: the API Contract Firewall, Env Machine,
+      and promostack.
+    </p>
+  </div>
+
+  <section class="container about-section" aria-labelledby="principles-heading">
+    <p class="section-eyebrow" id="principles-heading">Principles</p>
+    <ol class="principles-list">
+      {principles.map((pr, i) => (
+        <li class="principle">
+          <span class="principle-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+          <div>
+            <h2 class="principle-title">{pr.title}</h2>
+            <p class="principle-text">{pr.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container about-section" aria-labelledby="skills-heading">
+    <p class="section-eyebrow" id="skills-heading">Working stack</p>
+    <ul class="stack-chips about-skills" aria-label="Technologies">
+      {skills.map((s) => (
+        <li>{s}</li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container about-section" aria-labelledby="timeline-heading">
+    <p class="section-eyebrow" id="timeline-heading">Timeline</p>
+    <ul class="feed-list">
+      {shippingLog.map((entry) => (
+        <li class="feed-item">
+          <span class="feed-date">{entry.date}</span>
+          <span class="feed-text">{entry.text}</span>
+          {entry.href ? (
+            <a class="feed-link" href={entry.href} rel="noopener">
+              source <span aria-hidden="true">&nearr;</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container about-section" aria-labelledby="elsewhere-heading">
+    <p class="section-eyebrow" id="elsewhere-heading">Elsewhere</p>
+    <p class="about-links">
+      <a href={site.github} rel="me noopener">GitHub <span aria-hidden="true">&nearr;</span></a>
+      <a href={site.linkedin} rel="me noopener">LinkedIn <span aria-hidden="true">&nearr;</span></a>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </section>
 </BaseLayout>

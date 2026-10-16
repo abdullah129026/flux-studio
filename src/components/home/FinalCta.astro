@@ -1,0 +1,18 @@
+---
+// Home section 7: final CTA. Large typographic statement.
+// The .magnetic class is a hook for the Phase 3 motion pass.
+import { site } from "../../data/site";
+---
+
+<section class="final-cta" aria-labelledby="cta-heading">
+  <div class="container final-cta-inner">
+    <h2 class="final-cta-title" id="cta-heading">Have something worth building?</h2>
+    <p class="final-cta-sub">Tell us what it is. We read everything and reply within a couple of days.</p>
+    <p class="final-cta-actions">
+      <a class="btn btn-primary btn-large magnetic" href="/contact">Get in touch</a>
+    </p>
+    <p class="final-cta-mail">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </div>
+</section>

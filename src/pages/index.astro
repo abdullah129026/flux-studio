@@ -1,8 +1,25 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
+import Pillars from "../components/home/Pillars.astro";
+import Featured from "../components/home/Featured.astro";
+import Capabilities from "../components/home/Capabilities.astro";
+import Process from "../components/home/Process.astro";
+import Numbers from "../components/home/Numbers.astro";
+import FinalCta from "../components/home/FinalCta.astro";
 ---
 
-<BaseLayout title="Flux Studio" current="/">
+<BaseLayout
+  title="Flux Studio"
+  current="/"
+  description="Flux Studio is an independent software studio building AI products and full-stack applications, from idea to production."
+  ogImage="/og/home.png"
+>
   <Hero />
+  <Pillars />
+  <Featured />
+  <Capabilities />
+  <Process />
+  <Numbers />
+  <FinalCta />
 </BaseLayout>

@@ -1,0 +1,31 @@
+---
+// Home section 6: real numbers only. Counts derive from products.ts;
+// the test count is from the verified Spec2Run build record.
+// Omit this section rather than invent a number.
+import { products } from "../../data/products";
+
+const live = products.filter((p) => p.status === "Live").length;
+const building = products.filter((p) => p.status === "In Development").length;
+const upcoming = products.filter((p) => p.status === "Upcoming").length;
+
+const numbers = [
+  { value: String(live), label: "products live today" },
+  { value: String(building), label: "in development" },
+  { value: String(upcoming), label: "up next" },
+  { value: "106", label: "backend tests passing on Spec2Run" },
+];
+---
+
+<section class="numbers" aria-labelledby="numbers-heading">
+  <div class="container">
+    <p class="section-eyebrow" id="numbers-heading">By the numbers</p>
+    <dl class="numbers-strip">
+      {numbers.map((n) => (
+        <div class="number-cell">
+          <dt class="number-value">{n.value}</dt>
+          <dd class="number-label">{n.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

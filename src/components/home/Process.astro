@@ -1,0 +1,42 @@
+---
+// Home section 5: how we work. Vertical line with numbered nodes.
+// The .process-progress bar is motion-ready: Phase 3 will scrub it on scroll.
+const steps = [
+  {
+    title: "Specify",
+    text: "One page of plain writing before any code. If the spec does not fit on one page, it is two projects.",
+  },
+  {
+    title: "Build",
+    text: "Daily commits against the spec. Tests stay green; nothing merges red.",
+  },
+  {
+    title: "Ship",
+    text: "Deployed to a public URL with a changelog entry. Live means you can use it today.",
+  },
+  {
+    title: "Maintain",
+    text: "Dependencies checked, issues fixed, and the lessons folded into the next build.",
+  },
+];
+---
+
+<section class="process" aria-labelledby="process-heading">
+  <div class="container">
+    <p class="section-eyebrow" id="process-heading">How we work</p>
+    <ol class="process-list">
+      <span class="process-track" aria-hidden="true">
+        <span class="process-progress"></span>
+      </span>
+      {steps.map((s, i) => (
+        <li class="process-step">
+          <span class="process-node" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h2 class="process-title">{s.title}</h2>
+            <p class="process-text">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
