@@ -86,6 +86,7 @@ a {
   align-items: center;
   text-decoration: none;
   line-height: 1;
+  min-height: 2.75rem; /* 44px tap target */
 }
 
 .site-nav {
@@ -117,8 +118,8 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: transparent;
@@ -172,8 +173,8 @@ a {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: transparent;
@@ -1692,7 +1693,7 @@ html.js .feed-item.is-in {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: 2.5rem;
+  height: 2.75rem;
   padding: 0 0.8rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);

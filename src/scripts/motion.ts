@@ -10,9 +10,18 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 if (!reduceMotion && mode !== "none") {
   document.documentElement.classList.add("motion");
-  import("./motion-core.ts")
-    .then((m) => m.initMotion(mode))
-    .catch(() => {
-      document.documentElement.classList.remove("motion");
-    });
+  // Defer the heavy chunk until the browser is idle so it never competes
+  // with the critical path (HTML, CSS, fonts) for bandwidth. LCP does not
+  // depend on it: hero content has no [data-reveal] staging.
+  const load = () =>
+    import("./motion-core.ts")
+      .then((m) => m.initMotion(mode))
+      .catch(() => {
+        document.documentElement.classList.remove("motion");
+      });
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(load, { timeout: 2500 });
+  } else {
+    setTimeout(load, 0);
+  }
 }

@@ -1,5 +1,59 @@
 /* Flux Studio design tokens.
-   One neutral scale, one accent, dual themes. Everything else derives from these. */
+   One neutral scale, one accent, dual themes. Everything else derives from these.
+   Fonts are self-hosted in /fonts with stable names (copied from Fontsource
+   variable packages) so the display face can be preloaded for a fast LCP. */
+
+/* Space Grotesk Variable: display face, preloaded (latin) for LCP. */
+@font-face {
+  font-family: "Space Grotesk Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: "Space Grotesk Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url("/fonts/space-grotesk-latin-ext.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+/* Inter Variable: text face. */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/inter-latin.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/inter-latin-ext.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+/* JetBrains Mono Variable: mono face. */
+@font-face {
+  font-family: "JetBrains Mono Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url("/fonts/jetbrains-mono-latin-ext.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
 
 :root {
   /* Type */
@@ -56,7 +110,7 @@
   --bg-sunken: #f1f1ec;
   --ink: #11140f;
   --ink-muted: #4a524a;
-  --ink-faint: #8a9187;
+  --ink-faint: #646b61; /* 5.26:1 on paper, 4.85:1 on sunken, AA pass */
   --line: #e2e5de;
   --line-strong: #c9cec4;
   --accent: #047857; /* emerald-700, passes AA on paper */
@@ -72,7 +126,7 @@
   --bg-sunken: #080a09;
   --ink: #ecefe8;
   --ink-muted: #a9b1a4;
-  --ink-faint: #6f776b;
+  --ink-faint: #7d857a; /* 5.09:1 on dark bg, AA pass */
   --line: #232825;
   --line-strong: #39403b;
   --accent: #34d399; /* emerald-400 */
@@ -89,7 +143,7 @@
     --bg-sunken: #080a09;
     --ink: #ecefe8;
     --ink-muted: #a9b1a4;
-    --ink-faint: #6f776b;
+    --ink-faint: #7d857a;
     --line: #232825;
     --line-strong: #39403b;
     --accent: #34d399;

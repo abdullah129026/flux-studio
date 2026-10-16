@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { products, type Product } from "../../data/products";
-import { site } from "../../data/site";
 
 export function getStaticPaths() {
   return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
@@ -13,8 +12,9 @@ interface Props {
 
 const { product: p } = Astro.props;
 const index = products.findIndex((x) => x.slug === p.slug);
-const prev = products[(index - 1 + products.length) % products.length];
-const next = products[(index + 1) % products.length];
+// Modulo wrapping guarantees defined values; the non-null assertions document that.
+const prev = products[(index - 1 + products.length) % products.length]!;
+const next = products[(index + 1) % products.length]!;
 
 const description = p.tagline
   ? `${p.name}: ${p.tagline}`
