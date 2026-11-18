@@ -1,26 +1,594 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/Hero.astro";
-import Pillars from "../components/home/Pillars.astro";
-import Featured from "../components/home/Featured.astro";
-import Capabilities from "../components/home/Capabilities.astro";
-import Process from "../components/home/Process.astro";
-import Numbers from "../components/home/Numbers.astro";
-import FinalCta from "../components/home/FinalCta.astro";
+import HomeLayout from "../layouts/HomeLayout.astro";
 ---
 
-<BaseLayout
+<HomeLayout
   title="Flux Studio"
-  current="/"
-  motion="home"
   description="Flux Studio is an independent software studio building AI products and full-stack applications, from idea to production."
   ogImage="/og/home.png"
 >
-  <Hero />
-  <Pillars />
-  <Featured />
-  <Capabilities />
-  <Process />
-  <Numbers />
-  <FinalCta />
-</BaseLayout>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="wordmark" href="#top" aria-label="Flux Studio, home"><img class="logo-img" src="/favicon.svg" alt="" width="30" height="30"> Flux Studio</a>
+    <nav class="navlinks" aria-label="Main">
+      <button type="button" id="productsBtn" popovertarget="allProducts" aria-haspopup="true" aria-expanded="false">Products</button>
+      <a href="#products">Work</a>
+      <a href="#studio">Studio</a>
+      <a href="#platform">Platform</a>
+      <button type="button" class="nav-cta" data-open-contact>Start a conversation</button>
+    </nav>
+    <button type="button" class="menu-btn" popovertarget="mobileMenu" aria-label="Open menu">Menu</button>
+  </div>
+</header>
+
+<div id="mobileMenu" popover>
+  <a href="#products">Products</a>
+  <a href="#studio">Studio</a>
+  <a href="#platform">Platform</a>
+  <a href="mailto:abdullah129026@fluxyai.codes">Email us</a>
+</div>
+
+<div id="allProducts" popover>
+  <h3>All products</h3>
+  <a href="#products"><span>PatchPilot</span><span>Live demo</span></a>
+  <a href="#products"><span>Trace</span><span>Live</span></a>
+  <a href="#products"><span>GhostCode</span><span>Live</span></a>
+  <a href="#products"><span>PRISM</span><span>Live</span></a>
+  <a href="#products"><span>Spec2Run</span><span>Live</span></a>
+  <a href="#products"><span>API Contract Firewall</span><span>Live</span></a>
+  <a href="#products"><span>PromoStack</span><span>Flagship, in development</span></a>
+  <a href="#products"><span>UseUnderway</span><span>Flagship, in development</span></a>
+</div>
+
+<main id="top">
+  <div class="hero">
+    <div class="orb orb-a" aria-hidden="true"></div><div class="orb orb-b" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="status hero-in" style="--d:0"><span class="dot"></span> Building in public, new tools shipping through 2026</span>
+        <h1 class="hero-in" style="--d:1">AI dev tools with <span class="u">real systems</span> underneath.</h1>
+        <p class="lede hero-in" style="--d:2">Flux Studio is a small product studio. We build developer tools where the hard part is not the interface, it is the infrastructure, the execution, and whether it still works on a real codebase on a bad day.</p>
+        <div class="cta-row hero-in" style="--d:3">
+          <a class="btn" href="#products">See the products</a>
+          <button type="button" class="btn secondary" data-open-contact>Talk to the studio</button>
+        </div>
+        <p class="hero-note hero-in" style="--d:4">Run by Muhammad Abdullah Shah. Based in Pakistan, building for teams everywhere.</p>
+        <div class="facts hero-in" style="--d:5" aria-label="Studio facts">
+          <div class="fact"><b><span data-count="6">6</span></b><span>products live</span></div>
+          <div class="fact"><b><span data-count="2">2</span></b><span>flagships in development</span></div>
+          <div class="fact"><b><span data-count="1">1</span></b><span>person, full stack</span></div>
+        </div>
+      </div>
+
+      <div class="hero-in" style="--d:2">
+        <div class="stage3d stage-hero" data-stage3d role="img" aria-label="The Flux Studio logo, the original emerald curved X, rendered as a rotating 3D mark">
+          <div class="stage-fallback"><img src="/favicon.svg" alt="" width="118" height="118"></div>
+          <span class="stage-chip">The studio mark, in 3D</span>
+        </div>
+
+        <div class="terminal" id="terminal" aria-label="Illustrative product output">
+          <div class="term-head"><i></i><i></i><i></i><span style="margin-left:8px">patchpilot, sample run</span><span class="term-live">Live</span></div>
+          <div class="term-body" id="termBody">
+            <span class="tline" style="--n:0"><span class="dim">$ issue</span> github.com/you/repo/issues/123 <span class="dim">(sample)</span></span>
+            <span class="tline" style="--n:1"><span class="dim">sandbox</span> docker, pinned image, isolated</span>
+            <span class="tline" style="--n:2"><span class="dim">repro</span> <span class="warn">attempt 1 failed, feeding logs back in</span></span>
+            <span class="tline" style="--n:3"><span class="dim">repro</span> <span class="ok">attempt 2 reproduced</span></span>
+            <span class="tline" style="--n:4"><span class="dim">output</span> failing test + fix diff</span>
+            <span class="tline" style="--n:5"><span class="ok">verdict: reproduced, report ready</span><span class="cursor" aria-hidden="true"></span></span>
+          </div>
+          <div class="term-progress" aria-hidden="true"><i></i></div>
+          <div class="term-foot"><span>PatchPilot</span><span>Sample output showing how a run works</span><button type="button" class="term-replay" id="replayTerm">Replay run</button></div>
+        </div>
+
+        <div class="pipeline" aria-label="How a PatchPilot run flows">
+          <div class="pipeline-label"><span>How a run flows</span><span>Issue to verdict</span></div>
+          <svg viewBox="0 0 520 86" role="img" aria-label="Issue, sandbox, reproduce, test, verdict">
+            <path class="pipe-track" d="M52 34 H468" />
+            <path class="pipe-flow" d="M52 34 H468" />
+            <g><circle class="pipe-node" cx="52" cy="34" r="17"/><circle class="pipe-node-core pipe-pulse" cx="52" cy="34" r="5"/><text class="pipe-txt" x="52" y="68" text-anchor="middle">Issue</text><text class="pipe-sub" x="52" y="80" text-anchor="middle">link in</text></g>
+            <g><circle class="pipe-node" cx="156" cy="34" r="17"/><circle class="pipe-node-core pipe-pulse d1" cx="156" cy="34" r="5"/><text class="pipe-txt" x="156" y="68" text-anchor="middle">Sandbox</text><text class="pipe-sub" x="156" y="80" text-anchor="middle">Docker</text></g>
+            <g><circle class="pipe-node" cx="260" cy="34" r="17"/><circle class="pipe-node-core pipe-pulse d2" cx="260" cy="34" r="5"/><text class="pipe-txt" x="260" y="68" text-anchor="middle">Reproduce</text><text class="pipe-sub" x="260" y="80" text-anchor="middle">with logs</text></g>
+            <g><circle class="pipe-node" cx="364" cy="34" r="17"/><circle class="pipe-node-core pipe-pulse d3" cx="364" cy="34" r="5"/><text class="pipe-txt" x="364" y="68" text-anchor="middle">Test + diff</text><text class="pipe-sub" x="364" y="80" text-anchor="middle">failing first</text></g>
+            <g><circle class="pipe-node" cx="468" cy="34" r="17"/><circle class="pipe-node-core pipe-pulse d4" cx="468" cy="34" r="5"/><text class="pipe-txt" x="468" y="68" text-anchor="middle">Verdict</text><text class="pipe-sub" x="468" y="80" text-anchor="middle">checkable</text></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-label="Products and stack ticker">
+    <div class="ticker-track" id="tickerTrack">
+      <div class="ticker-group">
+        <span class="ticker-item"><i></i><b>PatchPilot</b> Docker repro agent</span>
+        <span class="ticker-item"><i></i><b>Trace</b> live execution, Yjs + WebSockets</span>
+        <span class="ticker-item"><i></i><b>GhostCode</b> dead code as a P and L</span>
+        <span class="ticker-item"><i></i><b>API Contract Firewall</b> contract learning proxy</span>
+        <span class="ticker-item"><i></i><b>Spec2Run</b> spec to runnable</span>
+        <span class="ticker-item"><i></i><b>PRISM</b> AI tooling, live</span>
+        <span class="ticker-item"><i></i><b>PromoStack</b> promotions API, flagship</span>
+        <span class="ticker-item"><i></i><b>UseUnderway</b> team metrics, flagship</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="products">
+    <div class="wrap">
+      <div class="sec-head reveal will-reveal">
+        <span class="label">Products</span>
+        <h2>Tools people can try today, not slideware.</h2>
+        <p>Every product below has a live build or a working demo. Filter by status, or open a quick view for the short version before you visit.</p>
+      </div>
+
+      <div class="filters" role="radiogroup" aria-label="Filter products">
+        <label><input type="radio" name="pf" id="f-all" checked> All</label>
+        <label><input type="radio" name="pf" id="f-live"> Live</label>
+        <label><input type="radio" name="pf" id="f-dev"> In development</label>
+        <label><input type="radio" name="pf" id="f-flag"> Flagships</label>
+      </div>
+
+      <div class="products">
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live demo</span><div class="meta" style="margin-top:10px">Docker · Agents · Testing</div></div>
+          <div><h3><a href="https://patchpilot-shah20.vercel.app" target="_blank" rel="noopener">PatchPilot</a></h3>
+          <p>Paste a GitHub issue link. PatchPilot reproduces the bug inside Docker, then writes the failing test and a fix diff. You get a verdict you can check, not a confident guess.</p></div>
+          <button class="quick" type="button" data-product="patchpilot">Quick view</button>
+        </article>
+
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live</span><div class="meta" style="margin-top:10px">Realtime · Yjs · WebSockets</div></div>
+          <div><h3><a href="https://trace-swwy.vercel.app" target="_blank" rel="noopener">Trace</a></h3>
+          <p>Like Figma, but for debugging. Multiple people watch code execute live, line by line, with variables, stack and an AI explanation you can scrub back through.</p></div>
+          <button class="quick" type="button" data-product="trace">Quick view</button>
+        </article>
+
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live</span><div class="meta" style="margin-top:10px">Static analysis · Cost</div></div>
+          <div><h3><a href="https://ghostcode-shah20.vercel.app" target="_blank" rel="noopener">GhostCode</a></h3>
+          <p>Turns dead code into a P and L statement. It finds what your codebase carries but never runs, and puts a maintenance cost next to it so the cleanup argument makes itself.</p></div>
+          <button class="quick" type="button" data-product="ghostcode">Quick view</button>
+        </article>
+
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live</span><div class="meta" style="margin-top:10px">APIs · Contracts</div></div>
+          <div><h3><a href="https://api-contract-firewall.vercel.app" target="_blank" rel="noopener">API Contract Firewall</a></h3>
+          <p>Sits in front of your API, learns its real contracts from traffic, and flags breaking changes before your consumers find them in production.</p></div>
+          <button class="quick" type="button" data-product="acf">Quick view</button>
+        </article>
+
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live</span><div class="meta" style="margin-top:10px">Specs · Generation</div></div>
+          <div><h3><a href="https://spec2run.fluxyai.codes" target="_blank" rel="noopener">Spec2Run</a></h3>
+          <p>Takes a written spec and turns it into a runnable starting point, so the gap between deciding what to build and having something to run gets much smaller.</p></div>
+          <button class="quick" type="button" data-product="spec2run">Quick view</button>
+        </article>
+
+        <article class="product" data-status="live">
+          <div><span class="pill live">Live</span><div class="meta" style="margin-top:10px">AI tooling</div></div>
+          <div><h3><a href="https://prism.fluxyai.codes" target="_blank" rel="noopener">PRISM</a></h3>
+          <p>One of the first Flux Studio releases and still live. Part of the core set the studio uses to test ideas about AI tooling on real users, in public.</p></div>
+          <button class="quick" type="button" data-product="prism">Quick view</button>
+        </article>
+
+        <article class="product" data-status="dev" data-flag="1">
+          <div><span class="pill flag">Flagship</span> <span class="pill dev">In development</span><div class="meta" style="margin-top:10px">Next.js · TypeScript · API first</div></div>
+          <div><h3>PromoStack</h3>
+          <p>Promotion infrastructure for indie SaaS, behind one API. Coupons, gift cards, referrals, loyalty and fraud controls, with billing, so small teams stop rebuilding checkout offers by hand.</p></div>
+          <button class="quick" type="button" data-product="promostack">Quick view</button>
+        </article>
+
+        <article class="product" data-status="dev" data-flag="1">
+          <div><span class="pill flag">Flagship</span> <span class="pill dev">In development</span><div class="meta" style="margin-top:10px">Next.js · Supabase · Stripe</div></div>
+          <div><h3>UseUnderway</h3>
+          <p>An engineering metrics OS for GitHub teams of 5 to 30 developers. DORA dashboards and PR review analytics at team level only, flat pricing, never per seat scores on individuals.</p></div>
+          <button class="quick" type="button" data-product="useunderway">Quick view</button>
+        </article>
+      </div>
+      <p class="empty-note">Nothing here under this filter yet.</p>
+      <p style="color:var(--ink-3);font-size:.9rem;margin-top:16px">Also in the lab: Env Machine, a time machine for environment variables. It stays off this list until it earns a live link.</p>
+    </div>
+  </section>
+
+  <section id="studio" style="padding-top:10px">
+    <div class="wrap split">
+      <div class="reveal will-reveal">
+        <div class="sec-head" style="margin-bottom:18px">
+          <span class="label">How we work</span>
+          <h2>Phase gated. Human approved. No silent scope creep.</h2>
+          <p>Each product runs on a written blueprint. A phase does not advance until the previous one is verified, which sounds slow and is actually why things here finish.</p>
+        </div>
+        <div class="work-list stagger">
+          <div class="work-item"><b>01</b><div><h3>Problem first, interface second</h3><p>The goal was never pretty screens for their own sake. It is products that solve a problem and show real system depth when you look underneath.</p></div></div>
+          <div class="work-item"><b>02</b><div><h3>Verified, not vibes</h3><p>Benchmarks get published either way. PatchPilot reported 3 out of 10 on its public benchmark re run, in public, because a corrected number beats a good story.</p></div></div>
+          <div class="work-item"><b>03</b><div><h3>Security and maintenance are the product</h3><p>No hardcoded secrets, validated inputs, pinned dependencies, tests green on every commit. Most new projects fail on exactly this, so it is treated as core work.</p></div></div>
+        </div>
+      </div>
+      <div class="quote reveal will-reveal" style="--i:1">
+        <span class="label">In public</span>
+        <p>“A senior engineer, Daniil Lukashevich, found PatchPilot from a launch post and tried it the same evening. His first attempt hit our stopped agent host and failed, he reported it in the thread, and we restarted the host and asked him to retry and share honest feedback.”</p>
+        <footer>From the PatchPilot launch, November 2026. First external attempt reported in the LinkedIn thread, retry pending when this page was written. Demo at patchpilot-shah20.vercel.app</footer>
+        <div style="margin-top:24px;border-top:1px solid var(--line);padding-top:20px">
+          <h3 style="margin:0 0 8px;font-size:1rem">What the studio is for</h3>
+          <p style="font-size:.98rem;color:var(--ink-2)">Flux Studio funds itself toward one breakout product. The plan is simple, keep shipping tools with real infrastructure under them until one of them clearly pulls ahead, then put everything behind it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="platform" class="platform">
+    <div class="wrap">
+      <div class="sec-head reveal will-reveal">
+        <span class="label">Under the hood of this page</span>
+        <h2>Built with the modern web platform, on purpose.</h2>
+        <p>This page uses the approach from Google Chrome’s Modern Web Guidance, native platform features instead of JavaScript heavy stand ins. Try them, the menu, filters and dialogs on this page are the demo.</p>
+      </div>
+      <div class="tech-grid stagger">
+        <div class="tech"><code>popover</code><h3>Native popover menus</h3><p>The Products menu and mobile menu use the Popover API. Light dismiss, Escape handling and focus behaviour come from the browser, not a library.</p></div>
+        <div class="tech"><code>&lt;dialog&gt;</code><h3>Native dialogs</h3><p>Quick view and the contact dialog use the dialog element with showModal, so backdrop, trapping and closing work the way users expect.</p></div>
+        <div class="tech"><code>@container</code><h3>Container queries</h3><p>Product rows respond to the width of their own container, not just the viewport, so the same component works in a sidebar or a full page.</p></div>
+        <div class="tech"><code>:has()</code><h3>Filtering in CSS</h3><p>The Live and Flagship filters above are driven by :has() on the checked radio. The page hides rows without a framework or a re render.</p></div>
+        <div class="tech"><code>animation-timeline</code><h3>Scroll driven motion</h3><p>The progress bar runs on a scroll timeline, sections reveal as they enter, the terminal replays its run, and the pipeline and ticker keep moving. All of it stops under reduced motion.</p></div>
+        <div class="tech"><code>startViewTransition</code><h3>View transitions</h3><p>Opening a quick view animates through the View Transitions API when the browser offers it, and falls back to an instant open when it does not.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="wrap cta-grid">
+      <div class="reveal will-reveal">
+        <span class="label">Contact</span>
+        <h2>Have a dev tool problem worth solving properly?</h2>
+        <p>Write with the problem, the codebase or team size, and what you have already tried. Straight answers, including when the answer is that you do not need us.</p>
+        <div class="cta-row">
+          <a class="btn" href="mailto:abdullah129026@fluxyai.codes">abdullah129026@fluxyai.codes</a>
+          <button type="button" class="btn secondary" data-open-contact>Open contact dialog</button>
+        </div>
+      </div>
+      <div class="stage3d stage-cta" data-stage3d data-lazy role="img" aria-label="The Flux Studio logo, the original emerald curved X, rendered as a rotating 3D mark">
+        <div class="stage-fallback"><img src="/favicon.svg" alt="" width="132" height="132"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<dialog id="productDialog" aria-labelledby="pdTitle">
+  <div class="dialog-body">
+    <button class="dialog-close" type="button" data-close aria-label="Close">✕</button>
+    <span class="pill live" id="pdStatus">Live</span>
+    <h3 id="pdTitle">Product</h3>
+    <p id="pdDesc"></p>
+    <dl><dt>Stack</dt><dd id="pdStack"></dd><dt>Status</dt><dd id="pdStatus2"></dd><dt>Best for</dt><dd id="pdFor"></dd></dl>
+    <a class="btn" id="pdLink" href="#" target="_blank" rel="noopener" style="display:none">Visit live product</a>
+  </div>
+</dialog>
+
+<dialog id="contactDialog" aria-labelledby="cdTitle">
+  <div class="dialog-body">
+    <button class="dialog-close" type="button" data-close aria-label="Close">✕</button>
+    <span class="label">Contact Flux Studio</span>
+    <h3 id="cdTitle">Start a conversation</h3>
+    <p>Email is fastest. Include what you are building, where it hurts, and any deadline that is real. You will hear back from Abdullah directly.</p>
+    <dl><dt>Email</dt><dd>abdullah129026@fluxyai.codes</dd><dt>Studio</dt><dd>fluxyai.codes</dd><dt>GitHub</dt><dd>abdullah129026</dd></dl>
+    <a class="btn" href="mailto:abdullah129026@fluxyai.codes?subject=Flux%20Studio%20enquiry">Write an email</a>
+  </div>
+</dialog>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="wordmark" href="#top" aria-label="Flux Studio, back to top"><img class="logo-img" src="/favicon.svg" alt="" width="30" height="30"> Flux Studio</a>
+        <p>AI powered developer tools with real systems underneath. Built in public, phase gated, and verified on real codebases.</p>
+        <p class="foot-by">Run by Muhammad Abdullah Shah. Based in Pakistan, building for teams everywhere.</p>
+        <span class="foot-status"><span class="dot"></span> Building in public, shipping through 2026</span><br>
+        <a class="foot-mail" href="mailto:abdullah129026@fluxyai.codes">abdullah129026@fluxyai.codes</a>
+      </div>
+      <nav aria-label="Footer products">
+        <h4>Products, live</h4>
+        <ul class="foot-list">
+          <li><a href="https://patchpilot-shah20.vercel.app" target="_blank" rel="noopener"><span class="fdot"></span>PatchPilot</a></li>
+          <li><a href="https://trace-swwy.vercel.app" target="_blank" rel="noopener"><span class="fdot"></span>Trace</a></li>
+          <li><a href="https://ghostcode-shah20.vercel.app" target="_blank" rel="noopener"><span class="fdot"></span>GhostCode</a></li>
+          <li><a href="https://api-contract-firewall.vercel.app" target="_blank" rel="noopener"><span class="fdot"></span>API Contract Firewall</a></li>
+          <li><a href="https://spec2run.fluxyai.codes" target="_blank" rel="noopener"><span class="fdot"></span>Spec2Run</a></li>
+          <li><a href="https://prism.fluxyai.codes" target="_blank" rel="noopener"><span class="fdot"></span>PRISM</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Footer studio">
+        <h4>Studio</h4>
+        <ul class="foot-list">
+          <li><a href="#products">All products</a></li>
+          <li><a href="#studio">How we work</a></li>
+          <li><a href="#platform">Platform</a></li>
+          <li><a href="#products"><span class="fdot amber"></span>PromoStack, flagship</a></li>
+          <li><a href="#products"><span class="fdot amber"></span>UseUnderway, flagship</a></li>
+          <li><a href="#products">Env Machine, in the lab</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Footer connect">
+        <h4>Connect</h4>
+        <ul class="foot-list">
+          <li><a href="https://github.com/abdullah129026" target="_blank" rel="noopener">GitHub <span class="arr" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.linkedin.com/in/muhammad-abdullah-shah-78227b3a3/" target="_blank" rel="noopener">LinkedIn <span class="arr" aria-hidden="true">↗</span></a></li>
+          <li><a href="mailto:abdullah129026@fluxyai.codes">Email <span class="arr" aria-hidden="true">↗</span></a></li>
+          <li><a href="#top">fluxyai.codes</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="foot-bar">
+      <p>© 2026 Flux Studio. Built with Astro. No trackers.</p>
+      <span class="mono">6 live · 2 flagships</span>
+      <a class="to-top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+    </div>
+    <div class="foot-giant" aria-hidden="true">Flux Studio</div>
+  </div>
+</footer>
+
+<script is:inline src="/js/three.min.js"></script>
+<script is:inline>
+  var PRODUCTS = {
+    patchpilot:{title:"PatchPilot",status:"Live demo",desc:"Paste a GitHub issue link. PatchPilot reproduces the bug inside Docker, then writes the failing test and a fix diff. Attempts after the first get the previous exit code and a capped log tail, so it learns from its own failure inside the run.",stack:"Docker, EC2 agent service, Qwen3-Coder",best:"Maintainers who need a reproduction before they need an opinion.",link:"https://patchpilot-shah20.vercel.app"},
+    trace:{title:"Trace",status:"Live",desc:"Like Figma, but for debugging. Multiple people watch code execute live, line by line, with variables, stack and an AI explanation you can scrub back through.",stack:"Yjs, WebSockets, sandboxed Python and JS runtimes",best:"Teaching, pairing and debugging sessions that need a shared view of execution.",link:"https://trace-swwy.vercel.app"},
+    ghostcode:{title:"GhostCode",status:"Live",desc:"Turns dead code into a P and L statement. It finds what your codebase carries but never runs, and puts a maintenance cost next to it.",stack:"Static analysis across a real codebase",best:"Teams carrying legacy code nobody wants to defend or delete.",link:"https://ghostcode-shah20.vercel.app"},
+    acf:{title:"API Contract Firewall",status:"Live",desc:"Sits in front of your API, learns its real contracts from traffic, and flags breaking changes before your consumers find them in production.",stack:"Live proxy with a contract learning loop",best:"API owners who ship changes other teams depend on.",link:"https://api-contract-firewall.vercel.app"},
+    spec2run:{title:"Spec2Run",status:"Live, v1.0",desc:"Takes a written spec and turns it into a runnable starting point, so the gap between deciding what to build and having something to run gets much smaller.",stack:"Spec parsing and project generation",best:"Builders who write the spec first and want momentum from it.",link:"https://spec2run.fluxyai.codes"},
+    prism:{title:"PRISM",status:"Live",desc:"One of the first Flux Studio releases and still live. Part of the core set the studio uses to test ideas about AI tooling on real users, in public.",stack:"AI tooling, web app",best:"Early Flux Studio users and anyone following the studio from the start.",link:"https://prism.fluxyai.codes"},
+    promostack:{title:"PromoStack",status:"Flagship, in development",desc:"Promotion infrastructure for indie SaaS, behind one API. Coupons, gift cards, referrals, loyalty and fraud controls, with billing. Priced for small SaaS, with no LLM costs in the core loop.",stack:"Next.js, TypeScript, Tailwind",best:"Indie SaaS founders rebuilding checkout offers by hand.",link:""},
+    useunderway:{title:"UseUnderway",status:"Flagship, in development",desc:"An engineering metrics OS for GitHub teams of 5 to 30 developers. DORA dashboards and PR review analytics at team level only, flat pricing, never per seat scores on individuals.",stack:"Next.js, TypeScript, Supabase, Stripe",best:"Small GitHub teams priced out of tools built for enterprises.",link:""}
+  };
+  var pd = document.getElementById('productDialog');
+  var cd = document.getElementById('contactDialog');
+  function openDialog(d){
+    if (document.startViewTransition) { document.startViewTransition(function(){ d.showModal(); }); }
+    else { d.showModal(); }
+  }
+  document.querySelectorAll('[data-product]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p = PRODUCTS[btn.getAttribute('data-product')]; if(!p) return;
+      document.getElementById('pdTitle').textContent = p.title;
+      document.getElementById('pdDesc').textContent = p.desc;
+      document.getElementById('pdStack').textContent = p.stack;
+      document.getElementById('pdStatus').textContent = p.status;
+      document.getElementById('pdStatus2').textContent = p.status;
+      document.getElementById('pdFor').textContent = p.best;
+      var link = document.getElementById('pdLink');
+      if (p.link) { link.href = p.link; link.style.display = 'inline-flex'; } else { link.style.display = 'none'; }
+      openDialog(pd);
+    });
+  });
+  document.querySelectorAll('[data-open-contact]').forEach(function(b){ b.addEventListener('click', function(){ openDialog(cd); }); });
+  document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ b.closest('dialog').close(); }); });
+  [pd, cd].forEach(function(d){ d.addEventListener('click', function(e){ if (e.target === d) d.close(); }); });
+  // Products dropdown: anchor it under the Products button, not the page corner.
+  // The popover has no positioned ancestor, so place it from the button's rect
+  // whenever it opens (beforetoggle / button click both run before it paints).
+  var productsBtn = document.getElementById('productsBtn');
+  var allProducts = document.getElementById('allProducts');
+  function positionProductsMenu(){
+    if (!productsBtn || !allProducts) return;
+    var r = productsBtn.getBoundingClientRect();
+    var w = Math.min(420, window.innerWidth - 32);
+    var left = Math.max(16, Math.min(r.left, window.innerWidth - w - 16));
+    allProducts.style.left = left + 'px';
+    allProducts.style.right = 'auto';
+    allProducts.style.top = (r.bottom + 10) + 'px';
+  }
+  if (productsBtn && allProducts) {
+    productsBtn.addEventListener('click', positionProductsMenu);
+    allProducts.addEventListener('beforetoggle', function(e){ if (e.newState === 'open') positionProductsMenu(); });
+    allProducts.addEventListener('toggle', function(e){ productsBtn.setAttribute('aria-expanded', e.newState === 'open' ? 'true' : 'false'); });
+    allProducts.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ if (allProducts.hidePopover) { try { allProducts.hidePopover(); } catch (err) {} } });
+    });
+    addEventListener('resize', function(){ if (allProducts.matches(':popover-open')) positionProductsMenu(); }, {passive:true});
+  }
+  // Fallback for scroll progress where scroll timelines are not supported
+  if (!CSS.supports('animation-timeline: scroll()')) {
+    var bar = document.querySelector('.progress');
+    addEventListener('scroll', function(){
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.transform = 'scaleX(' + (max > 0 ? h.scrollTop / max : 0) + ')';
+    }, {passive:true});
+  }
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Seamless ticker: duplicate the group once so the -50% loop has no gap
+  var tickerTrack = document.getElementById('tickerTrack');
+  if (tickerTrack && tickerTrack.children.length === 1) {
+    var clone = tickerTrack.children[0].cloneNode(true);
+    clone.setAttribute('aria-hidden','true');
+    tickerTrack.appendChild(clone);
+  }
+
+  // Header shadow on scroll
+  var siteHeader = document.querySelector('header.site');
+  addEventListener('scroll', function(){ if (siteHeader) siteHeader.classList.toggle('scrolled', window.scrollY > 8); }, {passive:true});
+
+  // Terminal: play when it enters view, replay on demand
+  var terminal = document.getElementById('terminal');
+  function playTerminal(){ if (!terminal) return; terminal.classList.remove('play'); void terminal.offsetWidth; terminal.classList.add('play'); }
+  if (terminal) {
+    if (reduceMotion) { terminal.classList.add('play'); }
+    else if ('IntersectionObserver' in window) {
+      var termObs = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting) { playTerminal(); termObs.disconnect(); } }); }, {threshold:.35});
+      termObs.observe(terminal);
+    } else { playTerminal(); }
+    var replayBtn = document.getElementById('replayTerm');
+    if (replayBtn) replayBtn.addEventListener('click', playTerminal);
+    // Subtle tilt on fine pointers only
+    if (!reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+      var heroGrid = document.querySelector('.hero-grid');
+      terminal.addEventListener('pointermove', function(ev){
+        var r = terminal.getBoundingClientRect();
+        var x = (ev.clientX - r.left) / r.width - .5;
+        var y = (ev.clientY - r.top) / r.height - .5;
+        terminal.style.transform = 'perspective(900px) rotateY(' + (x*3.2).toFixed(2) + 'deg) rotateX(' + (-y*3.2).toFixed(2) + 'deg)';
+      });
+      terminal.addEventListener('pointerleave', function(){ terminal.style.transform = ''; terminal.style.transition = 'transform .5s cubic-bezier(.22,1,.36,1)'; setTimeout(function(){ terminal.style.transition=''; }, 520); });
+    }
+  }
+
+  // Reveal on scroll + count up
+  function animateCount(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (isNaN(target) || reduceMotion) return;
+    var start = null;
+    function step(ts){ if (!start) start = ts; var p = Math.min((ts - start) / 900, 1); var eased = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(target * eased); if (p < 1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  var revealEls = document.querySelectorAll('.will-reveal, .stagger');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var revealObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); } });
+    }, {threshold:.18, rootMargin:'0px 0px -6% 0px'});
+    revealEls.forEach(function(el){ revealObs.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+  var counters = document.querySelectorAll('[data-count]');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var countObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) { animateCount(e.target); countObs.unobserve(e.target); } });
+    }, {threshold:.6});
+    counters.forEach(function(el){ countObs.observe(el); });
+  }
+
+  // 3D logo stages: the original emerald curved X from the live site logo
+  // (assets/favicon.svg, viewBox 0 0 64 64) rebuilt as two bent tubes.
+  // Stroke 1: M 15 11 C 29 27, 37 41, 49 55. Stroke 2: M 49 11 C 35 27, 27 41, 15 55.
+  // Mapped with x' = (x - 32) / 23.5, y' = (33 - y) / 22.5, plus a z bow so the
+  // crossing reads in 3D. If WebGL or three.js is unavailable the logo image
+  // fallback inside each stage simply stays visible.
+  (function(){
+    var stages = document.querySelectorAll('[data-stage3d]');
+    if (!stages.length || !window.THREE) return;
+
+    function initStage(stage, staticFrame){
+      var W = stage.clientWidth || 480;
+      var H = stage.clientHeight || 220;
+      var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(W, H);
+      if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.12;
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(38, W / H, .1, 100);
+      camera.position.set(0, .35, 7.4);
+
+      var pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), .04).texture;
+      scene.add(new THREE.AmbientLight(0xffffff, .35));
+      var key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3, 4, 5); scene.add(key);
+      var rim = new THREE.DirectionalLight(0x9ff5cf, .7); rim.position.set(-4, 2, -3); scene.add(rim);
+
+      var mat = new THREE.MeshPhysicalMaterial({color:0x2fbf71, roughness:.22, metalness:.05, clearcoat:.7, clearcoatRoughness:.25});
+      var group = new THREE.Group();
+      var strokeA = [new THREE.Vector3(-.72, .98, 0), new THREE.Vector3(-.13, .27, .36), new THREE.Vector3(.21, -.36, .36), new THREE.Vector3(.72, -.98, 0)];
+      var strokeB = [new THREE.Vector3(.72, .98, 0), new THREE.Vector3(.13, .27, -.36), new THREE.Vector3(-.21, -.36, -.36), new THREE.Vector3(-.72, -.98, 0)];
+      [strokeA, strokeB].forEach(function(pts){
+        var curve = new THREE.CubicBezierCurve3(pts[0], pts[1], pts[2], pts[3]);
+        group.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 48, .30, 24, false), mat));
+      });
+      group.rotation.set(-.12, .5, 0);
+      scene.add(group);
+
+      var N = 90, pos = new Float32Array(N * 3);
+      for (var i = 0; i < N; i++) {
+        pos[i * 3] = (Math.random() * 2 - 1) * 3.4;
+        pos[i * 3 + 1] = (Math.random() * 2 - 1) * 1.7;
+        pos[i * 3 + 2] = (Math.random() * 2 - 1) * 1.2;
+      }
+      var pg = new THREE.BufferGeometry();
+      pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      var sc = document.createElement('canvas'); sc.width = sc.height = 64;
+      var sx = sc.getContext('2d');
+      var grad = sx.createRadialGradient(32, 32, 2, 32, 32, 30);
+      grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
+      sx.fillStyle = grad; sx.fillRect(0, 0, 64, 64);
+      var points = new THREE.Points(pg, new THREE.PointsMaterial({size:.09, map:new THREE.CanvasTexture(sc), color:0x35b06f, transparent:true, opacity:.55, depthWrite:false}));
+      scene.add(points);
+
+      stage.appendChild(renderer.domElement);
+      renderer.render(scene, camera);
+      var fb = stage.querySelector('.stage-fallback');
+      if (fb) fb.style.display = 'none';
+      if (staticFrame) return;
+
+      var targetRX = -.12, targetRY = .5, dragging = false, px = 0, py = 0;
+      var nx = 0, ny = 0, visible = true, raf = 0, t0 = performance.now();
+      var el = renderer.domElement;
+      el.addEventListener('pointerdown', function(e){ dragging = true; px = e.clientX; py = e.clientY; try { el.setPointerCapture(e.pointerId); } catch (err) {} });
+      el.addEventListener('pointermove', function(e){
+        if (!dragging) return;
+        targetRY += (e.clientX - px) * .01;
+        targetRX += (e.clientY - py) * .008;
+        if (targetRX > 1.1) targetRX = 1.1; if (targetRX < -1.1) targetRX = -1.1;
+        px = e.clientX; py = e.clientY;
+      });
+      function endDrag(){ dragging = false; }
+      el.addEventListener('pointerup', endDrag);
+      el.addEventListener('pointercancel', endDrag);
+      addEventListener('pointermove', function(e){
+        nx = e.clientX / window.innerWidth - .5;
+        ny = e.clientY / window.innerHeight - .5;
+      }, {passive:true});
+
+      function resize(){
+        var w = stage.clientWidth, h = stage.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      if ('ResizeObserver' in window) { new ResizeObserver(resize).observe(stage); }
+      else { addEventListener('resize', resize); }
+
+      function frame(now){
+        raf = requestAnimationFrame(frame);
+        var t = (now - t0) / 1000;
+        if (!dragging) targetRY += .0035;
+        group.rotation.x += (targetRX - group.rotation.x) * .07;
+        group.rotation.y += (targetRY - group.rotation.y) * .07;
+        group.position.y = Math.sin(t * 1.1) * .07;
+        points.rotation.y = t * .02;
+        camera.position.x += (nx * .55 - camera.position.x) * .04;
+        camera.position.y += (.35 - ny * .4 - camera.position.y) * .04;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+      }
+      function start(){ if (!raf) raf = requestAnimationFrame(frame); }
+      function stop(){ if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries){
+          entries.forEach(function(en){ visible = en.isIntersecting; if (visible) start(); else stop(); });
+        }, {threshold:.05}).observe(stage);
+      }
+      start();
+    }
+
+    // Init is deferred until a stage nears the viewport, so WebGL setup never
+    // blocks first paint or DOMContentLoaded. The CTA stage (data-lazy) only
+    // starts when scrolled near, and its loop above only renders on screen.
+    stages.forEach(function(stage){
+      function boot(){
+        try { initStage(stage, reduceMotion); } catch (e) {}
+      }
+      if ('IntersectionObserver' in window) {
+        var lo = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if (en.isIntersecting) { lo.disconnect(); requestAnimationFrame(boot); }
+          });
+        }, {rootMargin:'320px 0px'});
+        lo.observe(stage);
+      } else if (document.readyState === 'complete') { boot(); }
+      else { addEventListener('load', boot); }
+    });
+  })();
+</script>
+
+</HomeLayout>
